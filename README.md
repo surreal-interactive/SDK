@@ -41,14 +41,13 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 
 Then, step-by-step operations are as follows:
 1. Install VisionPro depended packages including:
-   "com.unity.polyspatial"
-   "com.unity.polyspatial.visionos"
-   "com.unity.polyspatial.xr"
-It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
-![need a better one](https://github.com/surreal-interactive/SDK/assets/170064123/be04d85c-a751-435e-941b-d92211e51aef)
+   1. `com.unity.polyspatial`
+   2. `com.unity.polyspatial.visionos`
+   3. `com.unity.polyspatial.xr`
+    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
+   ![need a better one](https://github.com/surreal-interactive/SDK/assets/170064123/be04d85c-a751-435e-941b-d92211e51aef)
 
-2. Install Surreal Touch Unity package
-Install package "https://github.com/surreal-interactive/SDK.git"
+2. Install Surreal Touch Unity package: `https://github.com/surreal-interactive/SDK.git`
 
 3. Replace OVRCamRig with SVRCamRig, to create a game object that accurately mirrors the real-world poses of the controllers.
 ![need a better one, full screen](https://github.com/surreal-interactive/SDK/assets/170064123/578c82ab-760e-4bde-ac5e-e00df79a2511)
