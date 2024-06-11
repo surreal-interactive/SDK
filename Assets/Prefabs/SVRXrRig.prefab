@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8583081125616758805}
   - component: {fileID: 5682593808658574208}
   - component: {fileID: 664317164278023770}
-  - component: {fileID: 2120190658232784806}
   - component: {fileID: 2070678332796968552}
   - component: {fileID: 4230510347386339094}
   m_Layer: 0
@@ -272,7 +271,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194156555437180238}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -646,22 +645,6 @@ MonoBehaviour:
   m_OverrideInteractorLineOrigin: 1
   m_LineOriginTransform: {fileID: 0}
   m_LineOriginOffset: 0
---- !u!114 &2120190658232784806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194156555437180238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83916322ccf5b484fba0362e515526e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_modelSVRController: {fileID: 0}
-  m_controller: 1
-  showWhenHandsArePoweredByNaturalControllerPoses: 0
-  RayHelper: {fileID: 0}
 --- !u!54 &2070678332796968552
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -730,7 +713,6 @@ GameObject:
   - component: {fileID: 5755009543045893643}
   - component: {fileID: 6301656300632224009}
   - component: {fileID: 3387179874428937819}
-  - component: {fileID: 2901074230701247198}
   - component: {fileID: 9150181510556587404}
   - component: {fileID: 4256836097015880386}
   m_Layer: 0
@@ -1363,22 +1345,6 @@ MonoBehaviour:
   m_OverrideInteractorLineOrigin: 1
   m_LineOriginTransform: {fileID: 0}
   m_LineOriginOffset: 0
---- !u!114 &2901074230701247198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966562916949051861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83916322ccf5b484fba0362e515526e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_modelSVRController: {fileID: 0}
-  m_controller: 2
-  showWhenHandsArePoweredByNaturalControllerPoses: 0
-  RayHelper: {fileID: 0}
 --- !u!54 &9150181510556587404
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1896,75 +1862,6 @@ MonoBehaviour:
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   - {fileID: -944628639613478452, guid: 8bde599f6845f3edc8486f6b19f31946, type: 3}
---- !u!1 &6640769673821348188
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1656660738981487272}
-  - component: {fileID: 5381658060729508125}
-  - component: {fileID: 7047299867895494555}
-  m_Layer: 0
-  m_Name: UIHelper
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1656660738981487272
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6640769673821348188}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 321110510938392447}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5381658060729508125
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6640769673821348188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!114 &7047299867895494555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6640769673821348188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 938383c697d454a17bce6f3d83df5000, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  rayTransform: {fileID: 0}
-  angleDragThreshold: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_AllowActivationOnMobileDevice: 1
 --- !u!1 &7811158552409947642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,7 +1874,7 @@ GameObject:
   - component: {fileID: 3382618122016814769}
   - component: {fileID: 5914270488234995478}
   m_Layer: 0
-  m_Name: DmXrRig
+  m_Name: SVRXrRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2000,7 +1897,6 @@ Transform:
   - {fileID: 5120629534016421850}
   - {fileID: 1316828876714887717}
   - {fileID: 716378086042953981}
-  - {fileID: 1656660738981487272}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3382618122016814769
@@ -2029,6 +1925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12ba916b5d5e04bd4a157404b661cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lModelSVRController: {fileID: 0}
+  rModelSVRController: {fileID: 0}
 --- !u!1 &8607850169363907692
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,7 +2004,7 @@ GameObject:
   - component: {fileID: 3146243382948508393}
   - component: {fileID: 9140804063034624789}
   m_Layer: 0
-  m_Name: DMManager
+  m_Name: SVRManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

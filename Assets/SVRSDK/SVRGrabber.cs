@@ -125,11 +125,11 @@ public class SVRGrabber : MonoBehaviour
         // Update values from inputs
         if (m_controllerType == SVRControllerType.LController)
         {
-            m_prevFlex = DMControllerManager.instance.GetLeftControllerTrigger();
+            m_prevFlex = SVRInput.Get(SVRInput.Axis1D.LIndexTrigger);
         }
         else if (m_controllerType == SVRControllerType.RController)
         {
-            m_prevFlex = DMControllerManager.instance.GetRightControllerTrigger();
+            m_prevFlex = SVRInput.Get(SVRInput.Axis1D.RIndexTrigger);
         }
 
         CheckForGrabOrRelease(prevFlex);
@@ -321,16 +321,16 @@ public class SVRGrabber : MonoBehaviour
             {
                 localPose = new Pose
                 {
-                    position = DMControllerManager.instance.GetLeftControllerPosition(),
-                    rotation = DMControllerManager.instance.GetLeftControllerRotation()
+                    position = SVRInput.GetLeftControllerPosition(),
+                    rotation = SVRInput.GetLeftControllerRotation()
                 };
             }
             else if (m_controllerType == SVRControllerType.RController)
             {
                 localPose = new Pose
                 {
-                    position = DMControllerManager.instance.GetRightControllerPosition(),
-                    rotation = DMControllerManager.instance.GetRightControllerRotation()
+                    position = SVRInput.GetRightControllerPosition(),
+                    rotation = SVRInput.GetRightControllerRotation()
                 };
             }
             else
@@ -350,11 +350,11 @@ public class SVRGrabber : MonoBehaviour
             Vector3 linearVelocity;
             if (m_controllerType == SVRControllerType.LController)
             {
-                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, DMControllerManager.instance.GetLeftControllerVelocity());
+                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetLeftControllerVelocity());
             }
             else if (m_controllerType == SVRControllerType.RController)
             {
-                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, DMControllerManager.instance.GetRightControllerVelocity());
+                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetRightControllerVelocity());
             }
             else
             {
@@ -364,11 +364,11 @@ public class SVRGrabber : MonoBehaviour
             Vector3 angularVelocity;
             if (m_controllerType == SVRControllerType.LController)
             {
-                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, DMControllerManager.instance.GetLeftControllerAngularVelocity());
+                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetLeftControllerAngularVelocity());
             }
             else if (m_controllerType == SVRControllerType.RController)
             {
-                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, DMControllerManager.instance.GetRightControllerAngularVelocity());
+                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetRightControllerAngularVelocity());
             }
             else
             {
