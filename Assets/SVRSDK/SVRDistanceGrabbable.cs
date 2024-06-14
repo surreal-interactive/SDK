@@ -46,15 +46,15 @@ public class SVRDistanceGrabbable : SVRGrabbable
         renderer.GetPropertyBlock(mpb);
         if (isGrabbed || !InRange)
         {
-            mpb.SetFloat("HighlightState", 0.0f);
+            mpb.SetFloat("_HighlightState", 0.0f);
         }
         else if (Targeted)
         {
-            mpb.SetFloat("HighlightState", 0.3f);
+            mpb.SetFloat("_HighlightState", 0.5f);
         }
         else
         {
-            mpb.SetFloat("HighlightState", 0.5f);
+            mpb.SetFloat("_HighlightState", 0.3f);
         }
         renderer.SetPropertyBlock(mpb);
     }
