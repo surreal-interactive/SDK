@@ -13,9 +13,7 @@ public enum SVRControllerType
 
 public class SVRManager : MonoBehaviour
 {
-    private bool hadFocus = false;
-    public static event Action inputFocusLost;
-    public static event Action inputFocusAcquired;
+    Collider grabVolume;
 
     public GameObject lModelSVRController;
     public GameObject rModelSVRController;
@@ -39,18 +37,24 @@ public class SVRManager : MonoBehaviour
     {
         if (SVRInput.IsControllerInitialized())
         {
-            bool lControllerConnected = SVRInput.IsControllerConnected(0);
-            if (lControllerConnected != prevLControllerConnected)
+            if (lModelSVRController)
             {
-                lModelSVRController.SetActive(lControllerConnected);
-                prevLControllerConnected = lControllerConnected;
+                bool lControllerConnected = SVRInput.IsControllerConnected(0);
+                if (lControllerConnected != prevLControllerConnected)
+                {
+                    lModelSVRController.SetActive(lControllerConnected);
+                    prevLControllerConnected = lControllerConnected;
+                }
             }
-
-            bool rControllerConnected = SVRInput.IsControllerConnected(1);
-            if (rControllerConnected != prevRControllerConnected)
+            
+            if (rModelSVRController)
             {
-                rModelSVRController.SetActive(rControllerConnected);
-                prevRControllerConnected = rControllerConnected;
+                bool rControllerConnected = SVRInput.IsControllerConnected(1);
+                if (rControllerConnected != prevRControllerConnected)
+                {
+                    rModelSVRController.SetActive(rControllerConnected);
+                    prevRControllerConnected = rControllerConnected;
+                }
             }
         }
     }
@@ -60,35 +64,21 @@ public class SVRManager : MonoBehaviour
         return transform;
     }
 
-
-    public void RaycastCheck()
+    private void OnTriggerEnter(Collider other)
     {
-        Transform controllerTransform = GetControllerTransform();
-        RaycastHit raycastHit;
-        bool hitFlag = Physics.Raycast(controllerTransform.position, controllerTransform.forward, out raycastHit);
-        if (hitFlag &&
-            raycastHit.transform &&
-            raycastHit.transform.gameObject)
+        SVRDistanceGrabbable grabbable = other.GetComponentInChildren<SVRDistanceGrabbable>();
+        if (grabbable)
         {
-            if (!hadFocus)
-            {
-                if (inputFocusAcquired != null)
-                {
-                    inputFocusAcquired();
-                }
-            }
-            hadFocus = true;
+            grabbable.InRange = true;
         }
-        else
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        SVRDistanceGrabbable grabbable = other.GetComponentInChildren<SVRDistanceGrabbable>();
+        if (grabbable)
         {
-            if (hadFocus)
-            {
-                if (inputFocusLost != null)
-                {
-                    inputFocusLost();
-                }
-            }
-            hadFocus = false;
+            grabbable.InRange = false;
         }
     }
 }
