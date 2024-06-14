@@ -6,7 +6,8 @@ using UnityEngine;
 public class SVRDistanceGrabbable : SVRGrabbable
 {
     Renderer renderer;
-    MaterialPropertyBlock mpb;
+    //MaterialPropertyBlock mpb;
+    Material mat;
 
     public bool InRange
     {
@@ -36,26 +37,30 @@ public class SVRDistanceGrabbable : SVRGrabbable
     {
         base.Start();
         renderer = gameObject.GetComponent<Renderer>();
-        mpb = new MaterialPropertyBlock();
-        RefreshHighlight();
-        renderer.SetPropertyBlock(mpb);
+        mat = renderer.material;
+        //mpb = new MaterialPropertyBlock();
+        //RefreshHighlight();
+        //renderer.SetPropertyBlock(mpb);
     }
 
     void RefreshHighlight()
     {
-        renderer.GetPropertyBlock(mpb);
+        //renderer.GetPropertyBlock(mpb);
         if (isGrabbed || !InRange)
         {
-            mpb.SetFloat("_HighlightState", 0.0f);
+            renderer.material.SetFloat("_HighlightState", 0.0f);
+            //mpb.SetFloat("_HighlightState", 0.0f);
         }
         else if (Targeted)
         {
-            mpb.SetFloat("_HighlightState", 0.5f);
+            renderer.material.SetFloat("_HighlightState", 0.5f);
+            //mpb.SetFloat("_HighlightState", 0.5f);
         }
         else
         {
-            mpb.SetFloat("_HighlightState", 0.3f);
+            renderer.material.SetFloat("_HighlightState", 0.3f);
+            //mpb.SetFloat("_HighlightState", 0.3f);
         }
-        renderer.SetPropertyBlock(mpb);
+        //renderer.SetPropertyBlock(mpb);
     }
 }
