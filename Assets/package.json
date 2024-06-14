@@ -1,9 +1,9 @@
 {
-  "name": "com.unity.xr.dmprovider",
-  "displayName": "DM InputSystem Provider",
+  "name": "com.unity.xr.surrealsdk",
+  "displayName": "Surreal InputSystem Provider",
   "version": "1.1.22",
   "unity": "2022.3",
-  "description": "DM Input Device",
+  "description": "Surreal Input Device",
   "keywords": [],
   "dependencies": {
     "com.unity.xr.management": "4.0.0",
