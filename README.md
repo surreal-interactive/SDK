@@ -56,6 +56,7 @@ Install package "https://github.com/surreal-interactive/SDK.git"
 ![image](https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd)
 
 All Done!
+
 Grabbable objects are cyan highlighted if they are within grabbing range, and objects pointed by controllers are yellow highlighted
 ![image](https://github.com/surreal-interactive/SDK/assets/73978606/d8d6dfb4-4869-46d0-8023-8f36bdc86096)
 
