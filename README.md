@@ -10,7 +10,8 @@ We are dedicated to providing seamless support for developers, enabling them to 
 In this tutorial, we will introduce how to port an Oculus project to a VisionOS application powered by Surreal Touch.
 
 The [Oculus Starter Samples](https://github.com/oculus-samples/Unity-StarterSamples) provide a full-functionality scene where players can interact with and throw various game objects, showcasing the system's capabilities.
-<img src="https://github.com/surreal-interactive/SDK/assets/73978606/a1173c4a-e16f-4e5b-a56c-181bac135df4" alt="description" width="500" height="300">
+
+<img src="https://github.com/surreal-interactive/SDK/assets/73978606/a1173c4a-e16f-4e5b-a56c-181bac135df4" alt="description" width="30%">
 
 
 # Step-by-Step Adaptation
