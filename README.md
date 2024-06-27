@@ -54,15 +54,18 @@ It's recommended to follow [Install a UPM package from a Git URL](https://docs.u
 Install package "https://github.com/surreal-interactive/SDK.git"
 
 4. Replace OVRCamRig with SVRCamRig, to create a game object that accurately mirrors the real-world poses of the controllers.
-![image](https://github.com/surreal-interactive/SDK/assets/73978606/f271bef6-b7f7-4ba2-92f4-20bef6fd9e6d)
+
+<img src="https://github.com/surreal-interactive/SDK/assets/73978606/f271bef6-b7f7-4ba2-92f4-20bef6fd9e6d" alt="description" width="30%">
 
 5. Implement grab operations, add script "SVRDistanceGrabbable.cs" to gameobjects ready for grabbing
-![image](https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd)
+
+<img src="https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd" alt="description" width="30%">
 
 All Done!
 
 Grabbable objects are cyan highlighted if they are within grabbing range, and objects pointed by controllers are yellow highlighted
-![image](https://github.com/surreal-interactive/SDK/assets/73978606/d8d6dfb4-4869-46d0-8023-8f36bdc86096)
+
+<img src="https://github.com/surreal-interactive/SDK/assets/73978606/d8d6dfb4-4869-46d0-8023-8f36bdc86096" alt="description" width="30%">
 
 Video here:
 
