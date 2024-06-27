@@ -20,7 +20,7 @@ To ensure a smooth development experience, we provide the Surreal VR SDK (SVR), 
 To achieve this, we provide an overview of the one-to-one mapping for controller-related operations:
 
 
-## Adaptation Overview
+## one-to-one mapping
 
 To ensure a smooth development experience, we provide the Surreal VR SDK (SVR), designed to offer Oculus developers a plug-and-play experience.
 
@@ -42,24 +42,30 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 
 Then, step-by-step operations are as follows:
 1. Install VisionPro depended packages including:
-   "com.unity.polyspatial"
-   "com.unity.polyspatial.visionos"
-   "com.unity.polyspatial.xr"
-It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
 
-<img src="https://github.com/surreal-interactive/SDK/assets/73978606/81ac325f-0088-40b3-af75-477b2dd30920" alt="description" width="30%">
+   i.   "com.unity.polyspatial"
+   
+   ii.  "com.unity.polyspatial.visionos"
+   
+   iii. "com.unity.polyspatial.xr"
+
+   It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
+
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/81ac325f-0088-40b3-af75-477b2dd30920" alt="description" width="30%">
 
 
-3. Install Surreal Touch Unity package
+2. Install Surreal Touch Unity package
 Install package "https://github.com/surreal-interactive/SDK.git"
 
-4. Replace OVRCamRig with SVRCamRig, to create a game object that accurately mirrors the real-world poses of the controllers.
+3. Replace OVRCamRig with SVRCamRig, to create a game object that accurately mirrors the real-world poses of the controllers.
 
-<img src="https://github.com/surreal-interactive/SDK/assets/73978606/f271bef6-b7f7-4ba2-92f4-20bef6fd9e6d" alt="description" width="30%">
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/f271bef6-b7f7-4ba2-92f4-20bef6fd9e6d" alt="description" width="30%">
 
-5. Implement grab operations, add script "SVRDistanceGrabbable.cs" to gameobjects ready for grabbing
+4. Implement grab operations:
 
-<img src="https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd" alt="description" width="30%">
+   SVRDistanceGrabbable.cs: scripts for gameobjects ready for grabbing.
+
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd" alt="description" width="30%">
 
 All Done!
 
