@@ -51,7 +51,8 @@ Then, step-by-step operations are as follows:
 
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
 
-   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/81ac325f-0088-40b3-af75-477b2dd30920" alt="description" width="30%">
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/c0146b4b-795c-443d-b24f-67bcb3174939" alt="description" width="30%">
+
 
 
 2. Install Surreal Touch Unity package
@@ -59,19 +60,22 @@ Install package "https://github.com/surreal-interactive/SDK.git"
 
 3. Replace OVRCamRig with SVRCamRig, to create a game object that accurately mirrors the real-world poses of the controllers.
 
-   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/f271bef6-b7f7-4ba2-92f4-20bef6fd9e6d" alt="description" width="30%">
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/ae2faf44-33b4-4884-b498-c5c8f7563204" alt="description" width="30%">
+
 
 4. Implement grab operations:
 
    SVRDistanceGrabbable.cs: scripts for gameobjects ready for grabbing.
 
-   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/73218926-defe-4570-ab97-f70245d91efd" alt="description" width="30%">
+   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/3f77d5aa-8a34-4d7e-bc17-929dabdba003" alt="description" width="30%">
+
 
 All Done!
 
 Grabbable objects are cyan highlighted if they are within grabbing range, and objects pointed by controllers are yellow highlighted
 
-<img src="https://github.com/surreal-interactive/SDK/assets/73978606/d8d6dfb4-4869-46d0-8023-8f36bdc86096" alt="description" width="30%">
+<img src="https://github.com/surreal-interactive/SDK/assets/73978606/3dfa986d-8ed2-4175-b67c-cbcf41fe00e4" alt="description" width="30%">
+
 
 Video here:
 
