@@ -80,5 +80,5 @@ Grabbable objects are cyan highlighted if they are within grabbing range, and ob
 Video here:
 
 
-https://github.com/surreal-interactive/SDK/assets/73978606/41277564-a7dd-42bd-88d6-404513caec10
+[340678131-41277564-a7dd-42bd-88d6-404513caec10.webm](https://github.com/surreal-interactive/SDK/assets/73978606/a706a050-3729-40ec-af5e-baa2421e1634)
 
