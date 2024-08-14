@@ -1,0 +1,10 @@
+{
+    "name": "DMProvider",
+    "version": "1.0.0",
+    "libraryName": "xr_subsystem_provider",
+    "inputs": [
+        {
+            "id": "DMInputSystem"
+        }
+    ]
+}
