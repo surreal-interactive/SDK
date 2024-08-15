@@ -52,7 +52,7 @@ Then, step-by-step operations are as follows:
 
 
 2. Install Surreal Touch Unity package
-Install package `"https://github.com/surreal-interactive/SDK.git"`
+Install package `"https://github.com/surreal-interactive/SDK.git"`.
 
 3. Replace `OVRCameraRig` with `SVRCameraRig`, to create a game object that accurately mirrors the real-world poses of the controllers.
 
