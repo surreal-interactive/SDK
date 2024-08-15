@@ -4,7 +4,7 @@
 
 Surreal Touch, developed by [Surreal Interactive](https://surreal-interactive.com), is a VR gaming controller specifically designed for the Apple Vision Pro. This product aims to bridge the gap between the most immersive hardware and the vibrant VR game ecosystem.
 
-We are dedicated to providing seamless support for developers, enabling them to port their exceptional VR games to this new platform effortlessly. With Surreal Touch, you can bring the most engaging and interactive VR experiences to life on the Apple Vision Pro.
+We are dedicated to provide seamless support for developers, enabling them to port their exceptional VR games to this new platform effortlessly. With Surreal Touch, you can bring the most engaging and interactive VR experiences to life on the Apple Vision Pro.
 
 # Get Started
 In this tutorial, we will introduce how to port an Oculus project to a visionOS application powered by Surreal Touch.
@@ -22,10 +22,6 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 
 ## one-to-one mapping
 
-To ensure a smooth development experience, we provide the Surreal VR SDK (SVR), designed to offer Oculus developers a plug-and-play experience.
-
-To achieve this, we provide an overview of the one-to-one mapping for controller-related operations:
-
 | | Oculus VR SDK | Surreal VR SDK |
 |--|--|--|
 | Unity Package | [Oculus Unity Documentation](https://developer.oculus.com/documentation/unity/unity-ovrinput/) | [Surreal VR SDK GitHub](https://github.com/surreal-interactive/SDK) |
@@ -41,13 +37,13 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 ## Simple Adaption
 
 Then, step-by-step operations are as follows:
-1. Install VisionPro depended packages including:
+1. Install Vision Pro depended packages including:
 
-   i.   `"com.unity.polyspatial"`
+   `i.   "com.unity.polyspatial"`
    
-   ii.  `"com.unity.polyspatial.visionos"`
+   `ii.  "com.unity.polyspatial.visionos"`
    
-   iii. `"com.unity.polyspatial.xr"`
+   `iii. "com.unity.polyspatial.xr"`
 
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
 
@@ -65,14 +61,14 @@ Install package `"https://github.com/surreal-interactive/SDK.git"`
 
 4. Implement grab operations:
 
-   [`SVRDistanceGrabbable.cs`](./Assets/SVR/Scripts/SVRDistanceGrabbable.cs): scripts for gameobjects ready for grabbing.
+   [`SVRDistanceGrabbable.cs`](./Assets/SVR/Scripts/SVRDistanceGrabbable.cs): script for gameobjects ready for grabbing.
 
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/3f77d5aa-8a34-4d7e-bc17-929dabdba003" alt="description" width="100%">
 
 
 5. All Done!
 
-Grabbable objects are cyan highlighted if they are within grabbing range.
+Grabbable objects are cyan highlighted if they are within grabbing distance.
 
 
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/3dfa986d-8ed2-4175-b67c-cbcf41fe00e4" alt="description" width="100%">
