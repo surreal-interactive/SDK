@@ -14,7 +14,7 @@ using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-public struct DMDeviceState : IInputStateTypeInfo
+public struct SVRDeviceState : IInputStateTypeInfo
 {
     public FourCC format => new FourCC('C', 'U', 'S', 'T');
 
@@ -43,13 +43,13 @@ public struct DMDeviceState : IInputStateTypeInfo
         parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
     public byte y_;
 
-    [InputControl(name = "deviceRotation", layout = "Quaternion", displayName = "DMRotation")]
+    [InputControl(name = "deviceRotation", layout = "Quaternion", displayName = "SVRRotation")]
     public UnityEngine.Quaternion rotation_;
 
-    [InputControl(name = "devicePosition", layout = "Vector3", displayName = "DMPosition")]
+    [InputControl(name = "devicePosition", layout = "Vector3", displayName = "SVRPosition")]
     public UnityEngine.Vector3 position_;
 
-    [InputControl(name = "trackingState", layout = "Integer", displayName = "DMTrackingState")]
+    [InputControl(name = "trackingState", layout = "Integer", displayName = "SVRTrackingState")]
     public InputTrackingState tracking_state_;
     
     [InputControl(name = "deviceVelocity", layout = "Vector3", displayName = "DeviceVelocity", usage = "controllerVelocity")]
@@ -62,12 +62,12 @@ public struct DMDeviceState : IInputStateTypeInfo
 #if UNITY_EDITOR
 [InitializeOnLoad] // Call static class constructor in editor.
 #endif
-[InputControlLayout(stateType = typeof(DMDeviceState), displayName = "DMController", commonUsages = new[] { "LeftHand", "RightHand" })]
-public class DMInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiver
+[InputControlLayout(stateType = typeof(SVRDeviceState), displayName = "SVRController", commonUsages = new[] { "LeftHand", "RightHand" })]
+public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiver
 {
 
 #if UNITY_EDITOR
-    static DMInputDevice()
+    static SVRInputDevice()
     {
         // Trigger our RegisterLayout code in the editor.
         Initialize();
@@ -90,9 +90,9 @@ public class DMInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceive
         //       static layout, there is also the possibility to build layouts on the fly.
         //       Check out the API documentation for InputSystem.onFindLayoutForDevice and
         //       for InputSystem.RegisterLayoutBuilder.
-        InputSystem.RegisterLayout<DMInputDevice>(
+        InputSystem.RegisterLayout<SVRInputDevice>(
             matches: new InputDeviceMatcher()
-                .WithInterface("DMInputDevice"));
+                .WithInterface("SVRInputDevice"));
     }
     public ButtonControl PrimaryButton { get; protected set; }
     public ButtonControl SecondaryButton { get; protected set; }
@@ -129,7 +129,7 @@ public class DMInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceive
     protected override void OnAdded() {
     }
 
-    public static DMInputDevice current { get; private set; }
+    public static SVRInputDevice current { get; private set; }
     public override void MakeCurrent()
     {
         base.MakeCurrent();
@@ -148,14 +148,14 @@ public class DMInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceive
 
 
 #if UNITY_EDITOR
-    [MenuItem("Tools/DMInputDevice/Create Device")]
+    [MenuItem("Tools/SVRInputDevice/Create Device")]
     private static void CreateDevice()
     {
         // This is the code that you would normally run at the point where
         // you discover devices of your custom type.
         InputSystem.AddDevice(new InputDeviceDescription
         {
-            interfaceName = "DMInputDevice",
+            interfaceName = "SVRInputDevice",
             product = "DeepMirror"
         });
     }
@@ -163,10 +163,10 @@ public class DMInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceive
     // For completeness sake, let's also add code to remove one instance of our
     // custom device. Note that you can also manually remove the device from
     // the input debugger by right-clicking in and selecting "Remove Device".
-    [MenuItem("Tools/DMInputDevice/Remove Device")]
+    [MenuItem("Tools/SVRInputDevice/Remove Device")]
     private static void RemoveDevice()
     {
-        var customDevice = InputSystem.devices.FirstOrDefault(x => x is DMInputDevice);
+        var customDevice = InputSystem.devices.FirstOrDefault(x => x is SVRInputDevice);
         if (customDevice != null)
             InputSystem.RemoveDevice(customDevice);
     }

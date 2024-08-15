@@ -328,7 +328,7 @@ public partial class @SVRInputControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""73230344-44f4-4935-b99f-ded5756e20b4"",
-                    ""path"": ""<DMInputDevice>{LeftHand}/MenuButton"",
+                    ""path"": ""<SVRInputDevice>/MenuButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

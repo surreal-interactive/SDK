@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace Unity.XR.DMProvider
+namespace Unity.XR.SVRProvider
 {
 
-public class DMBuildPostProcessor
+public class SVRBuildPostProcessor
     {
         [UnityEditor.Callbacks.PostProcessBuild]
         public static void ChangeXcodePlist(BuildTarget buildTarget, string path)

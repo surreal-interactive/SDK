@@ -11,8 +11,8 @@ public class SVRControllerManager : MonoBehaviour
     UnityEngine.InputSystem.InputDevice left_device;
     UnityEngine.InputSystem.InputDevice right_device;
 
-    static DMDeviceState left_state = new DMDeviceState();
-    static DMDeviceState right_state = new DMDeviceState();
+    static SVRDeviceState left_state = new SVRDeviceState();
+    static SVRDeviceState right_state = new SVRDeviceState();
 
     private SVRInputControl svr_input_control;
     void Start()
@@ -33,27 +33,27 @@ public class SVRControllerManager : MonoBehaviour
                             }
                         };
 
-        InputSystem.RegisterLayout<DMInputDevice>(
+        InputSystem.RegisterLayout<SVRInputDevice>(
             matches: new InputDeviceMatcher()
-                .WithInterface("DMInputDevice"));
+                .WithInterface("SVRInputDevice"));
 
         left_device = InputSystem.AddDevice(new InputDeviceDescription
         {
-            interfaceName = "DMInputDevice",
+            interfaceName = "SVRInputDevice",
             product = "DeepMirror"
         });
         InputSystem.SetDeviceUsage(left_device, UnityEngine.InputSystem.CommonUsages.LeftHand);
         right_device = InputSystem.AddDevice(new InputDeviceDescription
         {
-            interfaceName = "DMInputDevice",
+            interfaceName = "SVRInputDevice",
             product = "DeepMirror"
         });
         InputSystem.SetDeviceUsage(right_device, UnityEngine.InputSystem.CommonUsages.RightHand);
 
 
 #if UNITY_IOS || UNITY_VISIONOS
-        dm.DMInputApi.DMControllerStart();
-        dm.DMInputApi.DMControllerSetButtonCallback(Marshal.GetFunctionPointerForDelegate((dm.DMInputApi.ButtonCallbackDelegate)ButtonInputCallback));
+        svr.SVRInputApi.DMControllerStart();
+        svr.SVRInputApi.DMControllerSetButtonCallback(Marshal.GetFunctionPointerForDelegate((svr.SVRInputApi.ButtonCallbackDelegate)ButtonInputCallback));
 #endif
         Application.onBeforeRender += OnBeforeRender;
 
@@ -62,7 +62,7 @@ public class SVRControllerManager : MonoBehaviour
     private void OnDestroy()
     {
         Application.onBeforeRender -= OnBeforeRender;
-        dm.DMInputApi.DMControllerStop();
+        svr.SVRInputApi.DMControllerStop();
     }
 
     // OnBeforeRender is called once per frame
@@ -70,21 +70,21 @@ public class SVRControllerManager : MonoBehaviour
     {
 #if UNITY_IOS || UNITY_VISIONOS
         if (left_device != null) {
-            DMUpdatePose(0,ref left_state);
-            left_state.tracking_state_ = dm.DMInputApi.DMControllerIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
-            InputSystem.QueueStateEvent<DMDeviceState>(left_device, left_state);
+            SVRUpdatePose(0,ref left_state);
+            left_state.tracking_state_ = svr.SVRInputApi.DMControllerIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
+            InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
-            DMUpdatePose(1,ref right_state);
-            right_state.tracking_state_ = dm.DMInputApi.DMControllerIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
-            InputSystem.QueueStateEvent<DMDeviceState>(right_device, right_state);
+            SVRUpdatePose(1,ref right_state);
+            right_state.tracking_state_ = svr.SVRInputApi.DMControllerIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
+            InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 	    }
 #endif
     }
 
-    [MonoPInvokeCallback(typeof(dm.DMInputApi.ButtonCallbackDelegate))]
-    static void ButtonInputCallback(long timestamp, int hand_type, dm.DMInputApi.Buttons buttons) {
+    [MonoPInvokeCallback(typeof(svr.SVRInputApi.ButtonCallbackDelegate))]
+    static void ButtonInputCallback(long timestamp, int hand_type, svr.SVRInputApi.Buttons buttons) {
         if (hand_type == 0) {
             UpdateButtonInput(ref left_state, buttons);
 	    }
@@ -93,7 +93,7 @@ public class SVRControllerManager : MonoBehaviour
 	    }
     }
 
-    static void UpdateButtonInput(ref DMDeviceState state, dm.DMInputApi.Buttons buttons) {
+    static void UpdateButtonInput(ref SVRDeviceState state, svr.SVRInputApi.Buttons buttons) {
         state.buttons_ = (buttons.primary_button) |
 	                       (buttons.secondary_button << 1) |
 			                    (buttons.menu_button << 2) |
@@ -119,21 +119,21 @@ public class SVRControllerManager : MonoBehaviour
 
     }
 
-    void DMUpdatePose(int hand_type,ref DMDeviceState state) {
-        dm.DMInputApi.DMPose pose = new dm.DMInputApi.DMPose();
-        dm.DMInputApi.DMVector3f linear_velocity = new dm.DMInputApi.DMVector3f();
-        var angular_velocity = new dm.DMInputApi.DMVector3f();
-        DMControllerPose(hand_type, ref pose, ref linear_velocity, ref angular_velocity);
+    void SVRUpdatePose(int hand_type,ref SVRDeviceState state) {
+        svr.SVRInputApi.SVRPose pose = new svr.SVRInputApi.SVRPose();
+        svr.SVRInputApi.SVRVector3f linear_velocity = new svr.SVRInputApi.SVRVector3f();
+        var angular_velocity = new svr.SVRInputApi.SVRVector3f();
+        SVRControllerPose(hand_type, ref pose, ref linear_velocity, ref angular_velocity);
         state.rotation_ = new Quaternion(pose.qx, pose.qy, pose.qz, pose.qw);
         state.position_ = new Vector3(pose.x, pose.y, pose.z);
         state.deviceVelocity_ = new Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
         state.deviceAngularVelocity_ = new Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
     }
 
-    void DMControllerPose(int hand_type, ref dm.DMInputApi.DMPose pose, ref dm.DMInputApi.DMVector3f linear_velocity, ref dm.DMInputApi.DMVector3f angular_velocity) {
+    void SVRControllerPose(int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity) {
 
 #if UNITY_IOS || UNITY_VISIONOS
-        dm.DMInputApi.DMControllerQueryPose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+        svr.SVRInputApi.DMControllerQueryPose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
 #endif
     }
 
@@ -165,6 +165,6 @@ public class SVRControllerManager : MonoBehaviour
 
     public bool IsControllerConnected(int handType)
     {
-        return dm.DMInputApi.DMControllerIsConnected(handType);
+        return svr.SVRInputApi.DMControllerIsConnected(handType);
     }
 }

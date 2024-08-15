@@ -12,19 +12,19 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Controls;
 using TMPro;
 using UnityEngine.Assertions;
-namespace dm {
-    public class DMInputApi : MonoBehaviour
+namespace svr {
+    public class SVRInputApi : MonoBehaviour
     {
 
         [StructLayout(LayoutKind.Sequential)] 
-        public struct DMPose{
+        public struct SVRPose{
 
             public float x, y, z;
             public float qw, qx, qy, qz;
 	    }
 
         [StructLayout(LayoutKind.Sequential)] 
-        public struct DMVector3f {
+        public struct SVRVector3f {
             public float x, y, z;
 	    }
 
@@ -68,7 +68,7 @@ namespace dm {
         public static extern void DMControllerStop();
 
         [DllImport("__Internal")]
-        public static extern void DMControllerQueryPose(long timestamp, int hand_type, ref DMPose pose, ref DMVector3f linear_velocity, ref DMVector3f angular_velocity, IntPtr hand_skeletons);
+        public static extern void DMControllerQueryPose(long timestamp, int hand_type, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
 
         [DllImport("__Internal")]
         public static extern void DMControllerSetButtonCallback(IntPtr callback_ptr);
