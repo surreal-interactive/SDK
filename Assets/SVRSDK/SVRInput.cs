@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
-public class SVRInput : MonoBehaviour, DMInputControl.IDMControlActions
+public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 {
     public enum Button
     {
@@ -46,7 +46,7 @@ public class SVRInput : MonoBehaviour, DMInputControl.IDMControlActions
     }
 
     public static SVRInput instance;
-    public DMManager dmManager;
+    public SVRControllerManager svrControllerManager;
     public Camera xrCamera;
 
     void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
@@ -206,7 +206,7 @@ public class SVRInput : MonoBehaviour, DMInputControl.IDMControlActions
     ControllerData left_controller_data;
     ControllerData right_controller_data;
 
-    DMInputControl dm_input_controller;
+    SVRInputControl svr_input_controller;
 
     public static bool GetDown(SVRInput.Button button)
     {
@@ -536,12 +536,12 @@ public class SVRInput : MonoBehaviour, DMInputControl.IDMControlActions
 
     public static bool IsControllerInitialized()
     {
-        return instance.dmManager.IsControllerInitialized();
+        return instance.svrControllerManager.IsControllerInitialized();
     }
 
     public static bool IsControllerConnected(int handType)
     {
-        return instance.dmManager.IsControllerConnected(handType);
+        return instance.svrControllerManager.IsControllerConnected(handType);
     }
 
     public void OnLeftControllerGrip(InputAction.CallbackContext context)
@@ -708,17 +708,17 @@ public class SVRInput : MonoBehaviour, DMInputControl.IDMControlActions
 
     void OnEnable()
     {
-        if (dm_input_controller == null)
+        if (svr_input_controller == null)
         {
-            dm_input_controller = new DMInputControl();
-            dm_input_controller.DMControl.SetCallbacks(this);
+            svr_input_controller = new SVRInputControl();
+            svr_input_controller.SVRControl.SetCallbacks(this);
         }
-        dm_input_controller.DMControl.Enable();
+        svr_input_controller.SVRControl.Enable();
     }
 
     void OnDisable()
     {
-        dm_input_controller.Disable();
+        svr_input_controller.Disable();
     }
 
     public Camera GetXRMainCamera()

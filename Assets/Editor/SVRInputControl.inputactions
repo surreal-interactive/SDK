@@ -1,8 +1,8 @@
 {
-    "name": "DMInputControl",
+    "name": "SVRInputControl",
     "maps": [
         {
-            "name": "DMControl",
+            "name": "SVRControl",
             "id": "8b674d19-650b-49a3-976d-5e29ca88bec5",
             "actions": [
                 {

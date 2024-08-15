@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
-public class InputCallback : MonoBehaviour, DMInputControl.IDMControlActions
+public class InputCallback : MonoBehaviour, SVRInputControl.ISVRControlActions
 {
 
 
@@ -166,7 +166,7 @@ public class InputCallback : MonoBehaviour, DMInputControl.IDMControlActions
     ControllerData left_controller_data;
     ControllerData right_controller_data;
 
-    DMInputControl dm_input_controller;
+    SVRInputControl dm_input_controller;
 
     public void OnLeftControllerGrip(InputAction.CallbackContext context)
     {
@@ -348,10 +348,10 @@ public class InputCallback : MonoBehaviour, DMInputControl.IDMControlActions
     {
         if (dm_input_controller == null)
         {
-            dm_input_controller = new DMInputControl();
-            dm_input_controller.DMControl.SetCallbacks(this);
+            dm_input_controller = new SVRInputControl();
+            dm_input_controller.SVRControl.SetCallbacks(this);
         }
-        dm_input_controller.DMControl.Enable();
+        dm_input_controller.SVRControl.Enable();
     }
 
     void OnDisable()

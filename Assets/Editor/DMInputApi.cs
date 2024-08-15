@@ -15,12 +15,6 @@ using UnityEngine.Assertions;
 namespace dm {
     public class DMInputApi : MonoBehaviour
     {
-#if UNITY_IOS || UNITY_VISIONOS
-        [DllImport("__Internal")]
-        public static extern void DMControllerStart();
-
-        [DllImport("__Internal")]
-        public static extern void DMControllerStop();
 
         [StructLayout(LayoutKind.Sequential)] 
         public struct DMPose{
@@ -32,10 +26,7 @@ namespace dm {
         [StructLayout(LayoutKind.Sequential)] 
         public struct DMVector3f {
             public float x, y, z;
-	    };
-
-        [DllImport("__Internal")]
-        public static extern void DMControllerQueryPose(long timestamp, int hand_type, ref DMPose pose, ref DMVector3f linear_velocity, ref DMVector3f angular_velocity);
+	    }
 
         [StructLayout(LayoutKind.Sequential)] 
         public struct Buttons{
@@ -49,13 +40,8 @@ namespace dm {
             public byte stick_y_value;
 	    }
 
-
-
         public delegate void ButtonCallbackDelegate(long timestamp, int hand_type, Buttons buttons);
 
-        [DllImport("__Internal")]
-        public static extern void DMControllerSetButtonCallback(IntPtr callback_ptr);
-        
         public static class HapticMode {
             public static readonly int kAMPLITUDE_15_FREQUENCY_100 = 0x0000;
             public static readonly int kAMPLITUDE_15_FREQUENCY_170 = 0x0100;
@@ -67,6 +53,26 @@ namespace dm {
             public static readonly int kAMPLITUDE_30_FREQUENCY_170 = 0x0102;
             public static readonly int kAMPLITUDE_30_FREQUENCY_300 = 0x0202;
         }
+
+        public static class Chirality
+        {
+            public static readonly int Left = 0;
+            public static readonly int Right = 0;
+        }
+
+#if UNITY_IOS || UNITY_VISIONOS
+        [DllImport("__Internal")]
+        public static extern void DMControllerStart();
+
+        [DllImport("__Internal")]
+        public static extern void DMControllerStop();
+
+        [DllImport("__Internal")]
+        public static extern void DMControllerQueryPose(long timestamp, int hand_type, ref DMPose pose, ref DMVector3f linear_velocity, ref DMVector3f angular_velocity, IntPtr hand_skeletons);
+
+        [DllImport("__Internal")]
+        public static extern void DMControllerSetButtonCallback(IntPtr callback_ptr);
+        
         [DllImport("__Internal")]
         public static extern void DMControllerHaptic(int hand_type, int mode, int duration_ms);
 
@@ -75,9 +81,6 @@ namespace dm {
 
         [DllImport("__Internal")]
         public static extern bool DMControllerBatteryLevel(int hand_type, ref byte battery_level);
-
-        [DllImport("__Internal")]
-        public static extern void GotHandPose(int hand_type, double[] pose);
 #endif
     }
 }

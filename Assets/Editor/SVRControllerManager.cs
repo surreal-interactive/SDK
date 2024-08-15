@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.XR;
 
-public class DMManager : MonoBehaviour
+public class SVRControllerManager : MonoBehaviour
 {
     UnityEngine.InputSystem.InputDevice left_device;
     UnityEngine.InputSystem.InputDevice right_device;
@@ -14,10 +14,7 @@ public class DMManager : MonoBehaviour
     static DMDeviceState left_state = new DMDeviceState();
     static DMDeviceState right_state = new DMDeviceState();
 
-    private DMInputControl dm_input_control;
-
-    private bool isControllerAdded = false;
-    private bool isControllerEnabled = false;
+    private SVRInputControl svr_input_control;
     void Start()
     {
 
@@ -59,7 +56,13 @@ public class DMManager : MonoBehaviour
         dm.DMInputApi.DMControllerSetButtonCallback(Marshal.GetFunctionPointerForDelegate((dm.DMInputApi.ButtonCallbackDelegate)ButtonInputCallback));
 #endif
         Application.onBeforeRender += OnBeforeRender;
-        isControllerAdded = true;
+
+    }
+
+    private void OnDestroy()
+    {
+        Application.onBeforeRender -= OnBeforeRender;
+        dm.DMInputApi.DMControllerStop();
     }
 
     // OnBeforeRender is called once per frame
@@ -80,7 +83,6 @@ public class DMManager : MonoBehaviour
 #endif
     }
 
-#if UNITY_IOS || UNITY_VISIONOS
     [MonoPInvokeCallback(typeof(dm.DMInputApi.ButtonCallbackDelegate))]
     static void ButtonInputCallback(long timestamp, int hand_type, dm.DMInputApi.Buttons buttons) {
         if (hand_type == 0) {
@@ -90,9 +92,7 @@ public class DMManager : MonoBehaviour
             UpdateButtonInput(ref right_state, buttons);
 	    }
     }
-#endif
 
-#if UNITY_IOS || UNITY_VISIONOS
     static void UpdateButtonInput(ref DMDeviceState state, dm.DMInputApi.Buttons buttons) {
         state.buttons_ = (buttons.primary_button) |
 	                       (buttons.secondary_button << 1) |
@@ -118,9 +118,7 @@ public class DMManager : MonoBehaviour
 	    }
 
     }
-#endif
 
-#if UNITY_IOS || UNITY_VISIONOS
     void DMUpdatePose(int hand_type,ref DMDeviceState state) {
         dm.DMInputApi.DMPose pose = new dm.DMInputApi.DMPose();
         dm.DMInputApi.DMVector3f linear_velocity = new dm.DMInputApi.DMVector3f();
@@ -131,27 +129,31 @@ public class DMManager : MonoBehaviour
         state.deviceVelocity_ = new Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
         state.deviceAngularVelocity_ = new Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
     }
-#endif
+
+    void DMControllerPose(int hand_type, ref dm.DMInputApi.DMPose pose, ref dm.DMInputApi.DMVector3f linear_velocity, ref dm.DMInputApi.DMVector3f angular_velocity) {
 
 #if UNITY_IOS || UNITY_VISIONOS
-    void DMControllerPose(int hand_type, ref dm.DMInputApi.DMPose pose, ref dm.DMInputApi.DMVector3f linear_velocity, ref dm.DMInputApi.DMVector3f angular_velocity) {
-        dm.DMInputApi.DMControllerQueryPose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity);
+        dm.DMInputApi.DMControllerQueryPose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+#endif
     }
-#endif
 
-    public bool IsControllerConnected(int handType)
+    void OnEnable()
     {
-#if UNITY_IOS || UNITY_VISIONS
-        return dm.DMInputApi.DMControllerIsConnected(handType);
-#else
-        return false;
-#endif
+        if (svr_input_control == null) {
+            svr_input_control = new SVRInputControl();
+        }
+        svr_input_control.SVRControl.Enable();
+        Debug.Log("Manager Enable");
+    }
+
+    void OnDisable() {
+        svr_input_control.SVRControl.Disable();
+        Debug.Log("Manager Disable");
     }
 
     public bool IsControllerInitialized()
     {
-#if UNITY_IOS || UNITY_VISIONS
-        if (isControllerAdded && isControllerEnabled)
+        if (svr_input_control != null)
         {
             return true;
         }
@@ -159,22 +161,10 @@ public class DMManager : MonoBehaviour
         {
             return false;
         }
-#else
-        return false;
-#endif
     }
 
-    void OnEnable()
+    public bool IsControllerConnected(int handType)
     {
-        if (dm_input_control == null) {
-            dm_input_control = new DMInputControl();
-        }
-        dm_input_control.DMControl.Enable();
-        isControllerEnabled = true;
-    }
-
-    void OnDisable() {
-        dm_input_control.DMControl.Disable();
-        isControllerEnabled = false;
+        return dm.DMInputApi.DMControllerIsConnected(handType);
     }
 }
