@@ -241,7 +241,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1001 &1277534841
+--- !u!1001 &635351462
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -291,7 +291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7811158552409947642, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
       propertyPath: m_Name
-      value: DmXrRig
+      value: SVRXrRig
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -303,4 +303,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 536959139}
-  - {fileID: 1277534841}
+  - {fileID: 635351462}

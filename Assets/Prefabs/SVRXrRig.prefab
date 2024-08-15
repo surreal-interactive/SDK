@@ -1610,7 +1610,7 @@ GameObject:
   - component: {fileID: 5120629534016421850}
   - component: {fileID: 1140414480226361718}
   m_Layer: 0
-  m_Name: DmControllerRoot
+  m_Name: SVRControllerRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
