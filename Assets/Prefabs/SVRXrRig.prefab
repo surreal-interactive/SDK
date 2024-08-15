@@ -1750,6 +1750,53 @@ MonoBehaviour:
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   - {fileID: -944628639613478452, guid: 8bde599f6845f3edc8486f6b19f31946, type: 3}
+--- !u!1 &7026214439701739907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8254013790859576718}
+  - component: {fileID: 1536258580278874043}
+  m_Layer: 0
+  m_Name: ARSession
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8254013790859576718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7026214439701739907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 321110510938392447}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1536258580278874043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7026214439701739907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3859a92a05d4f5d418cb6ca605290e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AttemptUpdate: 1
+  m_MatchFrameRate: 1
+  m_TrackingMode: 2
 --- !u!1 &7811158552409947642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,6 +1831,7 @@ Transform:
   - {fileID: 5120629534016421850}
   - {fileID: 1316828876714887717}
   - {fileID: 716378086042953981}
+  - {fileID: 8254013790859576718}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3382618122016814769
@@ -1798,7 +1846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a98fa9cb6d804078beba6fc61333ced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dmManager: {fileID: 3146243382948508393}
+  svrControllerManager: {fileID: 3146243382948508393}
   xrCamera: {fileID: 899766529357122697}
 --- !u!1 &8607850169363907692
 GameObject:
@@ -1957,8 +2005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12ba916b5d5e04bd4a157404b661cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lModelSVRController: {fileID: 0}
-  rModelSVRController: {fileID: 0}
+  lModelSVRController: {fileID: 2841069632363958494}
+  rModelSVRController: {fileID: 1065218684917170818}
 --- !u!1001 &5349575029682028982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1974,7 +2022,7 @@ PrefabInstance:
     - target: {fileID: 1324379217401962942, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
       propertyPath: m_parentTransform
       value: 
-      objectReference: {fileID: 8486250206915232517}
+      objectReference: {fileID: 5352088663465019006}
     - target: {fileID: 3824411498957534697, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
       propertyPath: m_Name
       value: SVRDistanceGrabHandLeft
@@ -2029,6 +2077,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6249984946426624971, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
   m_PrefabInstance: {fileID: 5349575029682028982}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2841069632363958494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7876800018614276456, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
+  m_PrefabInstance: {fileID: 5349575029682028982}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6536783032410680182
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2044,7 +2097,7 @@ PrefabInstance:
     - target: {fileID: 1324379217401962942, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
       propertyPath: m_parentTransform
       value: 
-      objectReference: {fileID: 2172871332707922583}
+      objectReference: {fileID: 4728407744968100581}
     - target: {fileID: 3824411498957534697, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
       propertyPath: m_Name
       value: SVRDistanceGrabHandRight
@@ -2097,5 +2150,10 @@ PrefabInstance:
 --- !u!4 &867850820936241341 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6249984946426624971, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
+  m_PrefabInstance: {fileID: 6536783032410680182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1065218684917170818 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6088650405246102004, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
   m_PrefabInstance: {fileID: 6536783032410680182}
   m_PrefabAsset: {fileID: 0}
