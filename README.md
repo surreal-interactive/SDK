@@ -28,7 +28,7 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 
 | | Oculus VR SDK | Surreal VR SDK |
 |--|--|--|
-| Unity Package | [Oculus Unity Documentation](https://developer.oculus.com/documentation/unity/unity-ovrinput/) | [Surreal VR SDK GitHub](https://github.com/surreal-vr-sdk) |
+| Unity Package | [Oculus Unity Documentation](https://developer.oculus.com/documentation/unity/unity-ovrinput/) | [Surreal VR SDK GitHub](https://github.com/surreal-interactive) |
 | Camera Rig Prefab | OVRCameraRig | SVRCameraRig |
 | Button Down | `OVRInput.GetDown(OVRInput.RawButton.A)` | `SVRInput.GetDown(SVRInput.Button.A)` |
 | Button Up | `OVRInput.GetUp(OVRInput.RawButton.X)` | `SVRInput.GetUp(SVRInput.RawButton.X)` |
