@@ -43,7 +43,7 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 Then, step-by-step operations are as follows:
 1. Install VisionPro depended packages including:
 
-   i.   "com.unity.polyspatial"
+   ‘i.   "com.unity.polyspatial"’
    
    ii.  "com.unity.polyspatial.visionos"
    
