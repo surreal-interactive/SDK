@@ -10,7 +10,6 @@ using UnityEngine.InputSystem.Utilities;
 using UnityEngine.InputSystem.LowLevel;
 
 using UnityEngine.InputSystem.Controls;
-using TMPro;
 using UnityEngine.Assertions;
 namespace svr {
     public class SVRInputApi : MonoBehaviour
