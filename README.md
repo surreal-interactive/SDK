@@ -29,7 +29,7 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 | | Oculus VR SDK | Surreal VR SDK |
 |--|--|--|
 | Unity Package | [Oculus Unity Documentation](https://developer.oculus.com/documentation/unity/unity-ovrinput/) | [Surreal VR SDK GitHub](https://github.com/surreal-interactive/SDK) |
-| Camera Rig Prefab | OVRCameraRig | SVRCameraRig |
+| Camera Rig Prefab | `OVRCameraRig` | `SVRCameraRig` |
 | Button Down | `OVRInput.GetDown(OVRInput.RawButton.A)` | `SVRInput.GetDown(SVRInput.Button.A)` |
 | Button Up | `OVRInput.GetUp(OVRInput.RawButton.X)` | `SVRInput.GetUp(SVRInput.RawButton.X)` |
 | Thumbstick State | `OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick)` | `SVRInput.Get(SVRInput.Axis2D.LThumbstick)` |
@@ -43,11 +43,11 @@ To achieve this, we provide an overview of the one-to-one mapping for controller
 Then, step-by-step operations are as follows:
 1. Install VisionPro depended packages including:
 
-   ‘i.   "com.unity.polyspatial"’
+   i.   `"com.unity.polyspatial"`
    
-   ii.  "com.unity.polyspatial.visionos"
+   ii.  `"com.unity.polyspatial.visionos"`
    
-   iii. "com.unity.polyspatial.xr"
+   iii. `"com.unity.polyspatial.xr"`
 
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
 
@@ -56,16 +56,16 @@ Then, step-by-step operations are as follows:
 
 
 2. Install Surreal Touch Unity package
-Install package "https://github.com/surreal-interactive/SDK.git"
+Install package `"https://github.com/surreal-interactive/SDK.git"`
 
-3. Replace OVRCameraRig with SVRCameraRig, to create a game object that accurately mirrors the real-world poses of the controllers.
+3. Replace `OVRCameraRig` with `SVRCameraRig`, to create a game object that accurately mirrors the real-world poses of the controllers.
 
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/ae2faf44-33b4-4884-b498-c5c8f7563204" alt="description" width="100%">
 
 
 4. Implement grab operations:
 
-   ['SVRDistanceGrabbable.cs'](./Assets/SVR/Scripts/SVRDistanceGrabbable.cs): scripts for gameobjects ready for grabbing.
+   [`SVRDistanceGrabbable.cs`](./Assets/SVR/Scripts/SVRDistanceGrabbable.cs): scripts for gameobjects ready for grabbing.
 
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/3f77d5aa-8a34-4d7e-bc17-929dabdba003" alt="description" width="100%">
 
@@ -84,4 +84,4 @@ Video here:
 [340678131-41277564-a7dd-42bd-88d6-404513caec10.webm](https://github.com/surreal-interactive/SDK/assets/73978606/a706a050-3729-40ec-af5e-baa2421e1634)
 
 
-A complete sample project is provided in [Unity-StarterSamples](https://github.com/surreal-interactive/Unity-StarterSamples).
+A complete sample project is provided in [`Unity-StarterSamples`](https://github.com/surreal-interactive/Unity-StarterSamples).
