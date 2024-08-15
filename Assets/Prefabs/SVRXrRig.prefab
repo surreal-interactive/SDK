@@ -1974,7 +1974,7 @@ PrefabInstance:
     - target: {fileID: 1324379217401962942, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
       propertyPath: m_parentTransform
       value: 
-      objectReference: {fileID: 8486250206915232517}
+      objectReference: {fileID: 5352088663465019006}
     - target: {fileID: 3824411498957534697, guid: 85d6b1ca7054748baa4f6ea918cf9b8f, type: 3}
       propertyPath: m_Name
       value: SVRDistanceGrabHandLeft
@@ -2049,7 +2049,7 @@ PrefabInstance:
     - target: {fileID: 1324379217401962942, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
       propertyPath: m_parentTransform
       value: 
-      objectReference: {fileID: 2172871332707922583}
+      objectReference: {fileID: 4728407744968100581}
     - target: {fileID: 3824411498957534697, guid: 4810a026ecff84044b9f9b2e7ccf463c, type: 3}
       propertyPath: m_Name
       value: SVRDistanceGrabHandRight
