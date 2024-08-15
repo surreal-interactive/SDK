@@ -45,7 +45,7 @@ Then, step-by-step operations are as follows:
    
    `iii. "com.unity.polyspatial.xr"`
 
-   It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html)
+   It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html).
 
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/c0146b4b-795c-443d-b24f-67bcb3174939" alt="description" width="100%">
 
