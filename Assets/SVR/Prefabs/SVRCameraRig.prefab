@@ -1808,7 +1808,7 @@ GameObject:
   - component: {fileID: 321110510938392447}
   - component: {fileID: 3382618122016814769}
   m_Layer: 0
-  m_Name: SVRXrRig
+  m_Name: SVRCameraRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
