@@ -59,7 +59,6 @@ namespace svr {
             public static readonly int Right = 0;
         }
 
-#if UNITY_IOS || UNITY_VISIONOS
         [DllImport("__Internal")]
         public static extern void SVRStart();
 
@@ -77,6 +76,5 @@ namespace svr {
 
         [DllImport("__Internal")]
         public static extern bool SVRIsConnected(int hand_type);
-#endif
     }
 }
