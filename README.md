@@ -60,6 +60,10 @@ Then, step-by-step operations are as follows:
 
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html).
 
+__Note__
+
+__Project is tested under PolySpatial version 1.1.4.__
+
 <p align="center">
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/c0146b4b-795c-443d-b24f-67bcb3174939" alt="description" width="80%">
 </p>
