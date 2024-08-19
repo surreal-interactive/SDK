@@ -70,7 +70,7 @@ Then, step-by-step operations are as follows:
 
 2. Install Surreal Touch Unity package
 
-   Install package `"https://github.com/surreal-interactive/SDK.git"`.
+   Install package `"https://github.com/surreal-interactive/SDK.git?path=/Assets"`.
 
    It's recommended to follow [Install a package from a Git URL by manifest](https://docs.unity3d.com/Manual/upm-manifestPrj.html).
 
