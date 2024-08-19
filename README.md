@@ -48,11 +48,11 @@ To ensure a smooth experience for developers who are familiar with Oculus SDK, a
 Then, step-by-step operations are as follows:
 1. Install visionOS required packages which including:
 
-   `i.   "com.unity.polyspatial"`
+   i.   `"com.unity.polyspatial"`
    
-   `ii.  "com.unity.polyspatial.visionos"`
+   ii.  `"com.unity.polyspatial.visionos"`
    
-   `iii. "com.unity.polyspatial.xr"`
+   iii. `"com.unity.polyspatial.xr"`
 
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html).
 
