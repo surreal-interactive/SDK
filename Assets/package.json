@@ -1,0 +1,14 @@
+{
+  "name": "com.unity.xr.surrealsdk",
+  "displayName": "Surreal InputSystem Provider",
+  "version": "1.0.0",
+  "unity": "2022.3",
+  "description": "Surreal Input Device",
+  "keywords": [],
+  "dependencies": {
+    "com.unity.xr.management": "4.0.0",
+    "com.unity.xr.interaction.toolkit": "2.5.3",
+    "com.unity.xr.hands": "1.3.0"
+  },
+  "unityRelease": "21f1"
+}
