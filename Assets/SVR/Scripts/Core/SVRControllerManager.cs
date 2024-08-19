@@ -40,20 +40,20 @@ public class SVRControllerManager : MonoBehaviour
         left_device = InputSystem.AddDevice(new InputDeviceDescription
         {
             interfaceName = "SVRInputDevice",
-            product = "DeepMirror"
+            product = "Surreal-Interactive"
         });
         InputSystem.SetDeviceUsage(left_device, UnityEngine.InputSystem.CommonUsages.LeftHand);
         right_device = InputSystem.AddDevice(new InputDeviceDescription
         {
             interfaceName = "SVRInputDevice",
-            product = "DeepMirror"
+            product = "Surreal-Interactive"
         });
         InputSystem.SetDeviceUsage(right_device, UnityEngine.InputSystem.CommonUsages.RightHand);
 
 
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.DMControllerStart();
-        svr.SVRInputApi.DMControllerSetButtonCallback(Marshal.GetFunctionPointerForDelegate((svr.SVRInputApi.ButtonCallbackDelegate)ButtonInputCallback));
+        svr.SVRInputApi.SVRStart();
+        svr.SVRInputApi.SVRSetButtonCallback(Marshal.GetFunctionPointerForDelegate((svr.SVRInputApi.ButtonCallbackDelegate)ButtonInputCallback));
 #endif
         Application.onBeforeRender += OnBeforeRender;
 
@@ -62,7 +62,9 @@ public class SVRControllerManager : MonoBehaviour
     private void OnDestroy()
     {
         Application.onBeforeRender -= OnBeforeRender;
-        svr.SVRInputApi.DMControllerStop();
+#if UNITY_IOS || UNITY_VISIONOS
+        svr.SVRInputApi.SVRStop();
+#endif
     }
 
     // OnBeforeRender is called once per frame
@@ -71,13 +73,13 @@ public class SVRControllerManager : MonoBehaviour
 #if UNITY_IOS || UNITY_VISIONOS
         if (left_device != null) {
             SVRUpdatePose(0,ref left_state);
-            left_state.tracking_state_ = svr.SVRInputApi.DMControllerIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
+            left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
             SVRUpdatePose(1,ref right_state);
-            right_state.tracking_state_ = svr.SVRInputApi.DMControllerIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
+            right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 	    }
 #endif
@@ -133,7 +135,7 @@ public class SVRControllerManager : MonoBehaviour
     void SVRControllerPose(int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity) {
 
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.DMControllerQueryPose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+        svr.SVRInputApi.SVRQueryDevicePose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
 #endif
     }
 
@@ -165,6 +167,9 @@ public class SVRControllerManager : MonoBehaviour
 
     public bool IsControllerConnected(int handType)
     {
-        return svr.SVRInputApi.DMControllerIsConnected(handType);
+#if UNITY_IOS || UNITY_VISIONOS
+        return svr.SVRInputApi.SVRIsConnected(handType);
+#endif
+        return false;
     }
 }

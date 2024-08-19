@@ -61,25 +61,22 @@ namespace svr {
 
 #if UNITY_IOS || UNITY_VISIONOS
         [DllImport("__Internal")]
-        public static extern void DMControllerStart();
+        public static extern void SVRStart();
 
         [DllImport("__Internal")]
-        public static extern void DMControllerStop();
+        public static extern void SVRStop();
 
         [DllImport("__Internal")]
-        public static extern void DMControllerQueryPose(long timestamp, int hand_type, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
+        public static extern void SVRQueryDevicePose(long timestamp, int hand_type, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
 
         [DllImport("__Internal")]
-        public static extern void DMControllerSetButtonCallback(IntPtr callback_ptr);
+        public static extern void SVRSetButtonCallback(IntPtr callback_ptr);
         
         [DllImport("__Internal")]
-        public static extern void DMControllerHaptic(int hand_type, int mode, int duration_ms);
+        public static extern void SVRHaptic(int hand_type, int mode, int duration_ms);
 
         [DllImport("__Internal")]
-        public static extern bool DMControllerIsConnected(int hand_type);
-
-        [DllImport("__Internal")]
-        public static extern bool DMControllerBatteryLevel(int hand_type, ref byte battery_level);
+        public static extern bool SVRIsConnected(int hand_type);
 #endif
     }
 }
