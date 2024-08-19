@@ -96,13 +96,17 @@ Then, step-by-step operations are as follows:
 
    Everything is setup in Unity, switch your target platform to visionOS, a xcode project will be created after building is finished.
 
+   Permissions including bluetooth connection are required, you can do the settings in xcode project after Unity building is done, we also provide the script [`SVRBuildPostProcessor.cs`](https://github.com/surreal-interactive/SDK/blob/master/Assets/Editor/SVRBuildPostProcessor.cs) which can help you applying required permissions automatically, put this script under `Assets/Editor` in your project(create if `Editor` folder not existed) and build.
+
 <p align="center">
    <img src="https://github.com/user-attachments/assets/ee35418d-96d9-4add-b79d-314fd72e46a7" alt="description" width="80%">
 </p>
 
-6. Request bluetooth permission
+6. Request permissions
 
    Open the xcode project, request bluetooth permission by adding `"Privacy - Bluetooth Always Usage Description"` in plist document.
+
+   If you put [`SVRBuildPostProcessor.cs`](https://github.com/surreal-interactive/SDK/blob/master/Assets/Editor/SVRBuildPostProcessor.cs) under `Assets/Editor` in your project as step 5 shown, all permission settings should have already been setup properly.
 
 <p align="center">
    <img src="https://github.com/user-attachments/assets/40d00cf7-4fac-473b-b5ac-e6c89d8002c4" alt="description" width="80%">
