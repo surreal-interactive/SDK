@@ -13,7 +13,7 @@ You can choose how to use it based on your situation.
 
 1. You can use Surreal VR SDK based on a brand new project, please follow Step-by-Step Instruction below.
 
-2. You can port your developed applications based on other SDKs(for example Oculus) to Surreal Touch visionOS in a simple way, a neat [Unity Starter Sample](https://github.com/surreal-interactive/Unity-StarterSamples) which is pretty similar to Oculus [Unity-StaterSamples](https://github.com/oculus-samples/Unity-StarterSamples/blob/d1df2ece3ed7fcc572ac645cbe240beabd611547/Assets/StarterSamples/Usage/DistanceGrab.unity) is provided, there's a full-functionality scene where players can interact with and throw various game objects, showcasing the system's capabilities.
+2. You can port your developed applications based on other SDKs(for example Oculus) to Surreal Touch visionOS in a simple way, a neat [Unity Starter Sample](https://github.com/surreal-interactive/Unity-StarterSamples) which is pretty similar to Oculus [Unity-StarterSamples](https://github.com/oculus-samples/Unity-StarterSamples/blob/d1df2ece3ed7fcc572ac645cbe240beabd611547/Assets/StarterSamples/Usage/DistanceGrab.unity) is provided, there's a full-functionality scene where players can interact with and throw various game objects, showcasing the system's capabilities.
 
 You can try to build and run this [example](https://github.com/surreal-interactive/Unity-StarterSamples/tree/master/Assets/Scenes) first before you dive into Surreal VR SDK.
 
