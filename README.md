@@ -22,7 +22,7 @@ You can try to build and run this [example](https://github.com/surreal-interacti
 </p>
 
 
-> ℹ️ : Versions of Unity prior to 2022.3 are not supported.
+> ℹ️ Versions of Unity prior to 2022.3 are not supported.
 
 # Step-by-Step Instruction
 Surreal VR SDK (SVR) is designed to offer a plug-and-play experience for developers.
@@ -60,7 +60,7 @@ Then, step-by-step operations are as follows:
    It's recommended to follow [Install a UPM package from a Git URL](https://docs.unity3d.com/Manual/upm-ui.html).
 
 
-   > ℹ️ : Project is tested under PolySpatial version 1.1.4.
+   > ℹ️ Project is tested under PolySpatial version 1.1.4.
 
 <p align="center">
    <img src="https://github.com/surreal-interactive/SDK/assets/73978606/c0146b4b-795c-443d-b24f-67bcb3174939" alt="description" width="80%">
@@ -73,7 +73,7 @@ Then, step-by-step operations are as follows:
    It's recommended to follow [Install a package from a Git URL by manifest](https://docs.unity3d.com/Manual/upm-manifestPrj.html).
 
 
-     > ℹ️ : If you get errors about functions of Surreal VR SDK are not accesible, remember switching building platform to visionOS.
+     > ℹ️ If you get errors about functions of Surreal VR SDK are not accesible, remember switching building platform to visionOS.
 
 <p align="center">
    <img src="https://github.com/user-attachments/assets/722d5aee-017b-4c50-9385-f4d072339b5f" alt="description" width="80%">
