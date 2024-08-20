@@ -90,7 +90,7 @@ Then, step-by-step operations are as follows:
    `SVRCameraRig` accurately mirrors the real-world poses of the controllers.
 
 <p align="center">
-   <img src="https://github.com/surreal-interactive/SDK/assets/73978606/ae2faf44-33b4-4884-b498-c5c8f7563204" alt="description" width="80%">
+   <img src="https://github.com/user-attachments/assets/f224c499-9688-4425-8af1-8607f2fb6fda" alt="description" width="80%">
 </p>
 
 5. Build Unity project
