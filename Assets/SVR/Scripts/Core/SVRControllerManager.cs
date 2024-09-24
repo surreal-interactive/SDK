@@ -71,14 +71,15 @@ public class SVRControllerManager : MonoBehaviour
     void OnBeforeRender()
     {
 #if UNITY_IOS || UNITY_VISIONOS
+        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
         if (left_device != null) {
-            SVRUpdatePose(0,ref left_state);
+            SVRUpdatePose(current_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
             left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
-            SVRUpdatePose(1,ref right_state);
+            SVRUpdatePose(current_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 	    }
@@ -121,21 +122,21 @@ public class SVRControllerManager : MonoBehaviour
 
     }
 
-    void SVRUpdatePose(int hand_type,ref SVRDeviceState state) {
+    void SVRUpdatePose(long display_timestamp,int hand_type,ref SVRDeviceState state) {
         svr.SVRInputApi.SVRPose pose = new svr.SVRInputApi.SVRPose();
         svr.SVRInputApi.SVRVector3f linear_velocity = new svr.SVRInputApi.SVRVector3f();
         var angular_velocity = new svr.SVRInputApi.SVRVector3f();
-        SVRControllerPose(hand_type, ref pose, ref linear_velocity, ref angular_velocity);
+        SVRControllerPose(display_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity);
         state.rotation_ = new Quaternion(pose.qx, pose.qy, pose.qz, pose.qw);
         state.position_ = new Vector3(pose.x, pose.y, pose.z);
         state.deviceVelocity_ = new Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
         state.deviceAngularVelocity_ = new Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
     }
 
-    void SVRControllerPose(int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity) {
+    void SVRControllerPose(long display_timestamp, int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity) {
 
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.SVRQueryDevicePose(0, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+        svr.SVRInputApi.SVRQueryDevicePose(display_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
 #endif
     }
 

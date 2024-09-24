@@ -77,6 +77,10 @@ namespace svr {
 
         [DllImport("__Internal")]
         public static extern bool SVRIsConnected(int hand_type);
+
+        [DllImport("__Internal")]
+        public static extern long SVRTimeNow();
+	
 #endif
     }
 }
