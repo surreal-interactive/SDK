@@ -56,7 +56,7 @@ namespace svr {
         public static class Chirality
         {
             public static readonly int Left = 0;
-            public static readonly int Right = 0;
+            public static readonly int Right = 1;
         }
 
 #if UNITY_IOS || UNITY_VISIONOS
