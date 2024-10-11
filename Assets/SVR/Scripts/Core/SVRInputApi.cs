@@ -56,7 +56,7 @@ namespace svr {
         public static class Chirality
         {
             public static readonly int Left = 0;
-            public static readonly int Right = 0;
+            public static readonly int Right = 1;
         }
 
 #if UNITY_IOS || UNITY_VISIONOS
@@ -77,6 +77,10 @@ namespace svr {
 
         [DllImport("__Internal")]
         public static extern bool SVRIsConnected(int hand_type);
+
+        [DllImport("__Internal")]
+        public static extern long SVRTimeNow();
+	
 #endif
     }
 }
