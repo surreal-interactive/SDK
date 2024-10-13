@@ -765,4 +765,15 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         return instance.right_controller_data.DeviceAngularVelocity;
     }
+
+    /**
+     * In case controllers may have latency, this api tries to predict 
+     *  pose of controllers in certain time.
+     *  
+     *  predictTime: predicted time in nano seconds
+     */
+    public static void SetupPredictTimeInNanoSeconds(int predictTime)
+    {
+        instance.svrControllerManager.SetupPredictTime(predictTime);
+    }
 }
