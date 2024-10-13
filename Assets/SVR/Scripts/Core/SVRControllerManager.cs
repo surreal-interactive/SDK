@@ -15,6 +15,9 @@ public class SVRControllerManager : MonoBehaviour
     static SVRDeviceState right_state = new SVRDeviceState();
 
     private SVRInputControl svr_input_control;
+
+    private int predictTime = 0;
+
     void Start()
     {
 
@@ -71,7 +74,7 @@ public class SVRControllerManager : MonoBehaviour
     void OnBeforeRender()
     {
 #if UNITY_IOS || UNITY_VISIONOS
-        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
+        long current_timestamp = svr.SVRInputApi.SVRTimeNow() + predictTime;
         if (left_device != null) {
             SVRUpdatePose(current_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
             left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
@@ -172,5 +175,10 @@ public class SVRControllerManager : MonoBehaviour
         return svr.SVRInputApi.SVRIsConnected(handType);
 #endif
         return false;
+    }
+
+    public void SetupPredictTime(int inPredictTime)
+    {
+        predictTime = inPredictTime;
     }
 }

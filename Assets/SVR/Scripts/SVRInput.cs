@@ -765,4 +765,9 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         return instance.right_controller_data.DeviceAngularVelocity;
     }
+
+    public static void SetupPredictTimeInNanoSeconds(int predictTime)
+    {
+        instance.svrControllerManager.SetupPredictTime(predictTime);
+    }
 }
