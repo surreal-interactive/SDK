@@ -776,4 +776,9 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         instance.svrControllerManager.SetupPredictTime(predictTime);
     }
+
+    public static void SVRStop()
+    {
+        instance.svrControllerManager.SVRStop();
+    }
 }
