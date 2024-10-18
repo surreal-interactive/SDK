@@ -181,4 +181,9 @@ public class SVRControllerManager : MonoBehaviour
     {
         predictTime = inPredictTime;
     }
+
+    public void SVRStop()
+    {
+        svr.SVRInputApi.SVRStop();
+    }
 }
