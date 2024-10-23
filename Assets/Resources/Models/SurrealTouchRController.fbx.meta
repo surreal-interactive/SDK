@@ -3,7 +3,57 @@ guid: dcdebc334105149d29855062bdbe4cf4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 111_color_202_209_237 #1
+    second: {fileID: 2100000, guid: 88bed520922504424a2c1702ee68ee46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 111_color_202_209_237 #2
+    second: {fileID: 2100000, guid: fb0f5d92750564c19a4e4af0d9ce6673, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 240314_ar controller_color_202_209_238 #1
+    second: {fileID: 2100000, guid: b917aac4b83184205b391946379f53a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Aluminum Rough #1
+    second: {fileID: 2100000, guid: ece65518916f840f2a920b6d24dbadc8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Empty material #1
+    second: {fileID: 2100000, guid: 9d04633e41e12408eafd1c66255687e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hard Textured Plastic White #1
+    second: {fileID: 2100000, guid: 3d1fa48551ce54aa0a4e8c55aa5938f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hard Textured Plastic White #2
+    second: {fileID: 2100000, guid: 8fe899e1020db464f96ad5180041e5e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material    #3
+    second: {fileID: 2100000, guid: 9d04633e41e12408eafd1c66255687e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rubber #1
+    second: {fileID: 2100000, guid: 02db4598a755847bf9f011dc2b46893d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: logo #1
+    second: {fileID: 2100000, guid: d19626831e3974d57b5e4d40ca4e7046, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
