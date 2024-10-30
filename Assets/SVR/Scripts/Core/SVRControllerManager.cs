@@ -13,7 +13,7 @@ public class SVRControllerManager : MonoBehaviour
 
     static SVRDeviceState left_state = new SVRDeviceState();
     static SVRDeviceState right_state = new SVRDeviceState();
-
+    static long poll_timestamp = 0;
     private SVRInputControl svr_input_control;
 
     private int predictTime = 0;
@@ -74,19 +74,30 @@ public class SVRControllerManager : MonoBehaviour
     void OnBeforeRender()
     {
 #if UNITY_IOS || UNITY_VISIONOS
-        long current_timestamp = svr.SVRInputApi.SVRTimeNow() + predictTime;
+        long predictTime = svr.SVRInputApi.SVRPredictedTimestamp();
+        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
+        long target_timestamp = current_timestamp + predictTime;
+        svr.SVRInputApi.SVRInputPollTimestamp(current_timestamp);
         if (left_device != null) {
-            SVRUpdatePose(current_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
+            SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
             left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
-            SVRUpdatePose(current_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
+            SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 	    }
+        poll_timestamp = current_timestamp;
 #endif
+    }
+
+    
+    private void OnRenderObject()
+    {
+        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
+        svr.SVRInputApi.SVRRenderFinish(poll_timestamp, current_timestamp);
     }
 
     [MonoPInvokeCallback(typeof(svr.SVRInputApi.ButtonCallbackDelegate))]

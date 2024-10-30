@@ -80,7 +80,16 @@ namespace svr {
 
         [DllImport("__Internal")]
         public static extern long SVRTimeNow();
-	
+
+
+        [DllImport("__Internal")]
+        public static extern void SVRInputPollTimestamp(long poll_timestamp);
+
+        [DllImport("__Internal")]
+        public static extern void SVRRenderFinish(long poll_timestamp, long render_finish_timestamp);
+
+        [DllImport("__Internal")]
+        public static extern long SVRPredictedTimestamp();
 #endif
     }
 }
