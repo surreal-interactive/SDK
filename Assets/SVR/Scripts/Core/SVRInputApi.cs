@@ -83,13 +83,13 @@ namespace svr {
 
 
         [DllImport("__Internal")]
-        public static extern void SVRInputPollTimestamp(long poll_timestamp);
+        public static extern void SVRInputPollTimestamp(int hand_type, long poll_timestamp);
 
         [DllImport("__Internal")]
-        public static extern void SVRRenderFinish(long poll_timestamp, long render_finish_timestamp);
+        public static extern void SVRRenderFinish(int hand_type, long poll_timestamp, long render_finish_timestamp);
 
         [DllImport("__Internal")]
-        public static extern long SVRPredictedTimestamp();
+        public static extern long SVRPredictedTimestamp(int hand_type);
 #endif
     }
 }

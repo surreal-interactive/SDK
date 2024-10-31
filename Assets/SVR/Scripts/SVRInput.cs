@@ -772,10 +772,13 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
      *  
      *  predictTime: predicted time in nano seconds
      */
+
+    /*
     public static void SetupPredictTimeInNanoSeconds(int predictTime)
     {
         instance.svrControllerManager.SetupPredictTime(predictTime);
     }
+    */
 
     public static void SVRStop()
     {

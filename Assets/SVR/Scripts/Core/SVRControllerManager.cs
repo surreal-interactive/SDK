@@ -13,10 +13,11 @@ public class SVRControllerManager : MonoBehaviour
 
     static SVRDeviceState left_state = new SVRDeviceState();
     static SVRDeviceState right_state = new SVRDeviceState();
-    static long poll_timestamp = 0;
+    static long left_poll_timestamp_ = 0;
+    static long right_poll_timestamp_ = 0;
+
     private SVRInputControl svr_input_control;
 
-    private int predictTime = 0;
 
     void Start()
     {
@@ -73,31 +74,45 @@ public class SVRControllerManager : MonoBehaviour
     // OnBeforeRender is called once per frame
     void OnBeforeRender()
     {
+        Debug.Log("OnBeforeRender Call");
+        long last_render_timestamp= svr.SVRInputApi.SVRTimeNow();
+        svr.SVRInputApi.SVRRenderFinish(0, left_poll_timestamp_, last_render_timestamp);
+        svr.SVRInputApi.SVRRenderFinish(1, right_poll_timestamp_, last_render_timestamp);
+
 #if UNITY_IOS || UNITY_VISIONOS
-        long predictTime = svr.SVRInputApi.SVRPredictedTimestamp();
-        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
-        long target_timestamp = current_timestamp + predictTime;
-        svr.SVRInputApi.SVRInputPollTimestamp(current_timestamp);
         if (left_device != null) {
+            long current_timestamp = svr.SVRInputApi.SVRTimeNow();
+            long predictTime = svr.SVRInputApi.SVRPredictedTimestamp(0);
+            long target_timestamp = current_timestamp + predictTime;
+            svr.SVRInputApi.SVRInputPollTimestamp(0, current_timestamp);
+            left_poll_timestamp_ = current_timestamp;
+
             SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
             left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
+            long current_timestamp = svr.SVRInputApi.SVRTimeNow();
+            long predictTime = svr.SVRInputApi.SVRPredictedTimestamp(1);
+            long target_timestamp = current_timestamp + predictTime;
+            svr.SVRInputApi.SVRInputPollTimestamp(1, current_timestamp);
+            right_poll_timestamp_ = current_timestamp;
+
             SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 	    }
-        poll_timestamp = current_timestamp;
 #endif
     }
 
     
-    private void OnRenderObject()
+    public void OnPostRender()
     {
+        Debug.Log("OnPostRender Call");
         long current_timestamp = svr.SVRInputApi.SVRTimeNow();
-        svr.SVRInputApi.SVRRenderFinish(poll_timestamp, current_timestamp);
+        svr.SVRInputApi.SVRRenderFinish(0, left_poll_timestamp_, current_timestamp);
+        svr.SVRInputApi.SVRRenderFinish(1, right_poll_timestamp_, current_timestamp);
     }
 
     [MonoPInvokeCallback(typeof(svr.SVRInputApi.ButtonCallbackDelegate))]
@@ -184,13 +199,9 @@ public class SVRControllerManager : MonoBehaviour
     {
 #if UNITY_IOS || UNITY_VISIONOS
         return svr.SVRInputApi.SVRIsConnected(handType);
-#endif
+#else
         return false;
-    }
-
-    public void SetupPredictTime(int inPredictTime)
-    {
-        predictTime = inPredictTime;
+#endif
     }
 
     public void SVRStop()
