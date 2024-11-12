@@ -67,7 +67,7 @@ namespace svr {
         public static extern void SVRStop();
 
         [DllImport("__Internal")]
-        public static extern void SVRQueryDevicePose(long timestamp, int hand_type, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
+        public static extern bool SVRPollDevicePose(int hand_type, long poll_timestamp, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
 
         [DllImport("__Internal")]
         public static extern void SVRSetButtonCallback(IntPtr callback_ptr);
@@ -81,15 +81,9 @@ namespace svr {
         [DllImport("__Internal")]
         public static extern long SVRTimeNow();
 
-
-        [DllImport("__Internal")]
-        public static extern void SVRInputPollTimestamp(int hand_type, long poll_timestamp);
-
         [DllImport("__Internal")]
         public static extern void SVRRenderFinish(int hand_type, long poll_timestamp, long render_finish_timestamp);
 
-        [DllImport("__Internal")]
-        public static extern long SVRPredictedTimestamp(int hand_type);
 #endif
     }
 }

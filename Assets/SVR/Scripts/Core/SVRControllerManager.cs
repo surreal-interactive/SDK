@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.XR;
+using System.Collections.Generic;
 
 public class SVRControllerManager : MonoBehaviour
 {
@@ -13,15 +14,15 @@ public class SVRControllerManager : MonoBehaviour
 
     static SVRDeviceState left_state = new SVRDeviceState();
     static SVRDeviceState right_state = new SVRDeviceState();
-    static long left_poll_timestamp_ = 0;
-    static long right_poll_timestamp_ = 0;
 
     private SVRInputControl svr_input_control;
 
+    static Queue<long> left_poll_timestamp_queue_ = new Queue<long>();
+    static Queue<long> right_poll_timestamp_queue_ = new Queue<long>();
+    static int queue_windows_size = 2;
 
     void Start()
     {
-
         InputSystem.onDeviceChange +=
                 (device, change) =>
                         {
@@ -74,45 +75,39 @@ public class SVRControllerManager : MonoBehaviour
     // OnBeforeRender is called once per frame
     void OnBeforeRender()
     {
-        Debug.Log("OnBeforeRender Call");
-        long last_render_timestamp= svr.SVRInputApi.SVRTimeNow();
-        svr.SVRInputApi.SVRRenderFinish(0, left_poll_timestamp_, last_render_timestamp);
-        svr.SVRInputApi.SVRRenderFinish(1, right_poll_timestamp_, last_render_timestamp);
+
+        if (left_poll_timestamp_queue_.Count == queue_windows_size) {
+            long poll_timestamp = left_poll_timestamp_queue_.Dequeue();
+            long render_timestamp = svr.SVRInputApi.SVRTimeNow();
+            svr.SVRInputApi.SVRRenderFinish(svr.SVRInputApi.Chirality.Left, poll_timestamp, render_timestamp);
+        }
+
+        if (right_poll_timestamp_queue_.Count == queue_windows_size) {
+            long poll_timestamp = right_poll_timestamp_queue_.Dequeue();
+            long render_timestamp = svr.SVRInputApi.SVRTimeNow();
+            svr.SVRInputApi.SVRRenderFinish(svr.SVRInputApi.Chirality.Right, poll_timestamp, render_timestamp);
+	    }
+
 
 #if UNITY_IOS || UNITY_VISIONOS
         if (left_device != null) {
-            long current_timestamp = svr.SVRInputApi.SVRTimeNow();
-            long predictTime = svr.SVRInputApi.SVRPredictedTimestamp(0);
-            long target_timestamp = current_timestamp + predictTime;
-            svr.SVRInputApi.SVRInputPollTimestamp(0, current_timestamp);
-            left_poll_timestamp_ = current_timestamp;
-
-            SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
+            long left_poll_timestamp = svr.SVRInputApi.SVRTimeNow();
+            SVRUpdatePose(left_poll_timestamp, svr.SVRInputApi.Chirality.Left, ref left_state);
+            left_poll_timestamp_queue_.Enqueue(left_poll_timestamp);
             left_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(0) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(left_device, left_state);
         }
 
         if (right_device != null) {
-            long current_timestamp = svr.SVRInputApi.SVRTimeNow();
-            long predictTime = svr.SVRInputApi.SVRPredictedTimestamp(1);
-            long target_timestamp = current_timestamp + predictTime;
-            svr.SVRInputApi.SVRInputPollTimestamp(1, current_timestamp);
-            right_poll_timestamp_ = current_timestamp;
+            long right_poll_timestamp = svr.SVRInputApi.SVRTimeNow();
+            SVRUpdatePose(right_poll_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
+            right_poll_timestamp_queue_.Enqueue(right_poll_timestamp);
 
-            SVRUpdatePose(target_timestamp, svr.SVRInputApi.Chirality.Right, ref right_state);
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
+
 	    }
 #endif
-    }
-
-    
-    public void OnPostRender()
-    {
-        Debug.Log("OnPostRender Call");
-        long current_timestamp = svr.SVRInputApi.SVRTimeNow();
-        svr.SVRInputApi.SVRRenderFinish(0, left_poll_timestamp_, current_timestamp);
-        svr.SVRInputApi.SVRRenderFinish(1, right_poll_timestamp_, current_timestamp);
     }
 
     [MonoPInvokeCallback(typeof(svr.SVRInputApi.ButtonCallbackDelegate))]
@@ -151,34 +146,36 @@ public class SVRControllerManager : MonoBehaviour
 
     }
 
-    void SVRUpdatePose(long display_timestamp,int hand_type,ref SVRDeviceState state) {
+    void SVRUpdatePose(long poll_timestamp,int hand_type,ref SVRDeviceState state) {
         svr.SVRInputApi.SVRPose pose = new svr.SVRInputApi.SVRPose();
         svr.SVRInputApi.SVRVector3f linear_velocity = new svr.SVRInputApi.SVRVector3f();
         var angular_velocity = new svr.SVRInputApi.SVRVector3f();
-        SVRControllerPose(display_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity);
+        SVRControllerPose(poll_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity);
         state.rotation_ = new Quaternion(pose.qx, pose.qy, pose.qz, pose.qw);
         state.position_ = new Vector3(pose.x, pose.y, pose.z);
         state.deviceVelocity_ = new Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
         state.deviceAngularVelocity_ = new Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
     }
 
-    void SVRControllerPose(long display_timestamp, int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity) {
-
+    void SVRControllerPose(long poll_timestamp, int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity)
+    {
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.SVRQueryDevicePose(display_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+        svr.SVRInputApi.SVRPollDevicePose(hand_type, poll_timestamp, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
 #endif
     }
 
     void OnEnable()
     {
-        if (svr_input_control == null) {
+        if (svr_input_control == null)
+        {
             svr_input_control = new SVRInputControl();
         }
         svr_input_control.SVRControl.Enable();
         Debug.Log("Manager Enable");
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         svr_input_control.SVRControl.Disable();
         Debug.Log("Manager Disable");
     }
