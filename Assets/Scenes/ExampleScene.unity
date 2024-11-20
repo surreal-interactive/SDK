@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,15 +170,73 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 867850820936241341, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.008
+      objectReference: {fileID: 0}
+    - target: {fileID: 867850820936241341, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 867850820936241341, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2054180278962977405, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2054180278962977405, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2054180278962977405, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3416994079919356625, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5755009543045893643, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6310501349775262295, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6965418789946128581, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: lModelSVRController
+      value: 
+      objectReference: {fileID: 311951893}
+    - target: {fileID: 6965418789946128581, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: rModelSVRController
+      value: 
+      objectReference: {fileID: 311951892}
     - target: {fileID: 7811158552409947642, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
       propertyPath: m_Name
       value: SVRCameraRig
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583081125616758805, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+--- !u!1 &311951892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3316930717562639833, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+  m_PrefabInstance: {fileID: 311951891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &311951893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5366355245364138048, guid: 45a1f29a217b54b269d757e2b240b273, type: 3}
+  m_PrefabInstance: {fileID: 311951891}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &536959137
 GameObject:
   m_ObjectHideFlags: 0
