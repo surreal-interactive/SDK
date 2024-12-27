@@ -19,7 +19,7 @@ public class SVRControllerManager : MonoBehaviour
 
     static Queue<long> left_poll_timestamp_queue_ = new Queue<long>();
     static Queue<long> right_poll_timestamp_queue_ = new Queue<long>();
-    static int queue_windows_size = 2;
+    static int queue_windows_size = 3;
 
     void Start()
     {
