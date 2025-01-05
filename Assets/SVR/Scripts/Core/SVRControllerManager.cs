@@ -54,7 +54,10 @@ public class SVRControllerManager : MonoBehaviour
             product = "Surreal-Interactive"
         });
         InputSystem.SetDeviceUsage(right_device, UnityEngine.InputSystem.CommonUsages.RightHand);
-
+        left_state.x_ = 128;
+        left_state.y_ = 128;
+        right_state.x_ = 128;
+        right_state.y_ = 128;
 
 #if UNITY_IOS || UNITY_VISIONOS
         svr.SVRInputApi.SVRStart();
