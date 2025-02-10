@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 {
@@ -48,17 +47,6 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     public static SVRInput instance;
     public SVRControllerManager svrControllerManager;
     public Camera xrCamera;
-
-    void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
-    {
-        if (Application.isPlaying)
-            property.DisableDirectAction();
-
-        property = value;
-
-        if (Application.isPlaying && isActiveAndEnabled)
-            property.EnableDirectAction();
-    }
 
     protected virtual float ReadValue(InputAction action)
     {
