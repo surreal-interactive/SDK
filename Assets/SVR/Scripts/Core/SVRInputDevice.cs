@@ -32,7 +32,7 @@ public struct SVRDeviceState : IInputStateTypeInfo
     [InputControl(name = "Grip", layout = "Axis", displayName = "Grip", format = "BYTE",parameters = "normalize,normalizeMax = 0.5, normalizeMin=0", usage = "Grip")]
     public byte grip_;
 
-    [InputControl(name = "Primary2DAxis", format = "BYTE", layout = "Stick", displayName = "Stick", usage = "Primary2DAxis")]
+    [InputControl(name = "Primary2DAxis", format = "VC2B", layout = "Stick")]
     [InputControl(name = "Primary2DAxis/x", defaultState = 127, format = "BYTE",
         offset = 0,
         parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
