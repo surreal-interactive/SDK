@@ -89,7 +89,7 @@ public class SVRControllerManager : MonoBehaviour
             long poll_timestamp = right_poll_timestamp_queue_.Dequeue();
             long render_timestamp = svr.SVRInputApi.SVRTimeNow();
             svr.SVRInputApi.SVRRenderFinish(svr.SVRInputApi.Chirality.Right, poll_timestamp, render_timestamp);
-	    }
+        }
 
 
 #if UNITY_IOS || UNITY_VISIONOS
@@ -109,7 +109,7 @@ public class SVRControllerManager : MonoBehaviour
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 
-	    }
+        }
 #endif
     }
 
@@ -125,9 +125,9 @@ public class SVRControllerManager : MonoBehaviour
 
     static void UpdateButtonInput(ref SVRDeviceState state, svr.SVRInputApi.Buttons buttons) {
         state.buttons_ = (buttons.primary_button) |
-	                       (buttons.secondary_button << 1) |
-			                    (buttons.menu_button << 2) |
-		                    (buttons.stick_z_button) << 5;
+                           (buttons.secondary_button << 1) |
+                                (buttons.menu_button << 2) |
+                            (buttons.stick_z_button) << 5;
         state.grip_ = buttons.grip_button_value;
         state.trigger_ = buttons.trigger_button_value;
         state.x_ = buttons.stick_x_value;
@@ -137,15 +137,15 @@ public class SVRControllerManager : MonoBehaviour
 
         if (TriggerPerfom) {
             state.buttons_ |= 0x1 << 3;
-	    } else {
+        } else {
             state.buttons_ &= 0xff ^ (0x1 << 3);
-	    }
+        }
 
         if (GripPerform) {
             state.buttons_ |= 0x1 << 4;
-	    } else {
+        } else {
             state.buttons_ &= 0xff ^ (0x1 << 4);
-	    }
+        }
 
     }
 

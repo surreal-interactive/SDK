@@ -20,12 +20,12 @@ namespace svr {
 
             public float x, y, z;
             public float qw, qx, qy, qz;
-	    }
+        }
 
         [StructLayout(LayoutKind.Sequential)] 
         public struct SVRVector3f {
             public float x, y, z;
-	    }
+        }
 
         [StructLayout(LayoutKind.Sequential)] 
         public struct Buttons{
@@ -37,7 +37,7 @@ namespace svr {
             public byte grip_button_value;
             public byte stick_x_value;
             public byte stick_y_value;
-	    }
+        }
 
         public delegate void ButtonCallbackDelegate(long timestamp, int chirality, Buttons buttons);
 
