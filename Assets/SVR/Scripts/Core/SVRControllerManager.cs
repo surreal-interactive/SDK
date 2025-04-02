@@ -207,7 +207,7 @@ public class SVRControllerManager : MonoBehaviour
     public void SVRHaptic(int chirality, float amplitude, float frequency, double duration_seconds)
     {
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.SVRHaptic(chirality, amplitude, frequency, duration_seconds);
+        svr.SVRInputApi.SVRHapticContinuous(chirality, amplitude, frequency, duration_seconds);
 #endif
     }
 
