@@ -204,6 +204,13 @@ public class SVRControllerManager : MonoBehaviour
 #endif
     }
 
+    public void SVRHaptic(int hand_type, int mode, int duration_ms)
+    {
+#if UNITY_IOS || UNITY_VISIONOS
+        svr.SVRInputApi.SVRHaptic(hand_type, mode, duration_ms);
+#endif
+    }
+
     public void SVRStop()
     {
         svr.SVRInputApi.SVRStop();
