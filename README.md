@@ -43,6 +43,7 @@ To ensure a smooth experience for developers who are familiar with Oculus SDK, a
 | Thumbstick Up | `OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp)` | `SVRInput.Get(SVRInput.Button.LThumbstickUp)` |
 | Index Trigger State | `OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger)` | `SVRInput.Get(SVRInput.Axis1D.RIndexTrigger)` |
 | Left Index Trigger Pressed | `OVRInput.Get(OVRInput.RawButton.LIndexTrigger)` | `SVRInput.GetDown(SVRInput.RawButton.LIndexTrigger)` |
+| Left Controller Vibration | `OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.LTouch)` | `SVRInput.TriggerHaptic(0, 0, 500)` |
 
 
 
