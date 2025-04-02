@@ -117,10 +117,10 @@ public class SVRControllerManager : MonoBehaviour
     static void ButtonInputCallback(long timestamp, int chirality, svr.SVRInputApi.Buttons buttons) {
         if (chirality == 0) {
             UpdateButtonInput(ref left_state, buttons);
-	    }
+        }
         if (chirality == 1) {
             UpdateButtonInput(ref right_state, buttons);
-	    }
+        }
     }
 
     static void UpdateButtonInput(ref SVRDeviceState state, svr.SVRInputApi.Buttons buttons) {
