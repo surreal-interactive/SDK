@@ -544,6 +544,11 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         return instance.svrControllerManager.IsControllerConnected(handType);
     }
 
+    public static void TriggerHaptic(int handType, int mode, int durationMs)
+    {
+        instance.svrControllerManager.SVRHaptic(handType, mode, durationMs);
+    }
+
     public void OnLeftControllerGrip(InputAction.CallbackContext context)
     {
         left_controller_data.Grip = context.action.ReadValue<float>();
