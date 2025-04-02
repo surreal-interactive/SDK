@@ -6,6 +6,7 @@ using UnityEngine;
 public class SVRDistanceGrabbable : SVRGrabbable
 {
     Renderer renderer;
+
     //MaterialPropertyBlock mpb;
     Material mat;
 

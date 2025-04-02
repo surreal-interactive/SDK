@@ -1,16 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
-using UnityEngine.InputSystem.Layouts;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR;
-using System.Linq;
-using System.Diagnostics;
-using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,29 +18,91 @@ public struct SVRDeviceState : IInputStateTypeInfo
 {
     public FourCC format => new FourCC('C', 'U', 'S', 'T');
 
-    [InputControl(name = "PrimaryButton", layout = "Button", bit = 0, displayName = "Primary Button", usage = "primaryButton", aliases = new[]{ "A", "X" })]
-    [InputControl(name = "SecondaryButton", layout = "Button", bit = 1, displayName = "Second Button", usage = "SecondaryButton", aliases = new[] { "B", "Y" })]
-    [InputControl(name = "MenuButton", layout = "Button", bit = 2, displayName = "Menu Button", aliases = new[] { "Menu" })]
-    [InputControl(name = "TriggerButton", layout = "Button", bit = 3, displayName ="Trigger Button" , usage = "TriggerButton")]
-    [InputControl(name = "GripButton", layout = "Button", bit = 4, displayName ="Grip Button", aliases = new[] { "GripButton", "GripPress" }, usage ="GripButton")]
-    [InputControl(name = "Primary2DAxisClick", layout = "Button", bit = 5, displayName = "Primary2DAxisClick", usage = "Primary2DAxisClick", aliases = new[] { "Primary2DAxisClick", "TouchpadPress" })]
+    [InputControl(
+        name = "PrimaryButton",
+        layout = "Button",
+        bit = 0,
+        displayName = "Primary Button",
+        usage = "primaryButton",
+        aliases = new[] { "A", "X" }
+    )]
+    [InputControl(
+        name = "SecondaryButton",
+        layout = "Button",
+        bit = 1,
+        displayName = "Second Button",
+        usage = "SecondaryButton",
+        aliases = new[] { "B", "Y" }
+    )]
+    [InputControl(
+        name = "MenuButton",
+        layout = "Button",
+        bit = 2,
+        displayName = "Menu Button",
+        aliases = new[] { "Menu" }
+    )]
+    [InputControl(
+        name = "TriggerButton",
+        layout = "Button",
+        bit = 3,
+        displayName = "Trigger Button",
+        usage = "TriggerButton"
+    )]
+    [InputControl(
+        name = "GripButton",
+        layout = "Button",
+        bit = 4,
+        displayName = "Grip Button",
+        aliases = new[] { "GripButton", "GripPress" },
+        usage = "GripButton"
+    )]
+    [InputControl(
+        name = "Primary2DAxisClick",
+        layout = "Button",
+        bit = 5,
+        displayName = "Primary2DAxisClick",
+        usage = "Primary2DAxisClick",
+        aliases = new[] { "Primary2DAxisClick", "TouchpadPress" }
+    )]
     public int buttons_;
 
-    [InputControl(name = "Trigger", layout = "Axis", displayName = "Trigger", format = "BYTE", parameters = "normalize,normalizeMax = 0.5, normalizeMin=0", usage = "Trigger")]
+    [InputControl(
+        name = "Trigger",
+        layout = "Axis",
+        displayName = "Trigger",
+        format = "BYTE",
+        parameters = "normalize,normalizeMax = 0.5, normalizeMin=0",
+        usage = "Trigger"
+    )]
     public byte trigger_;
 
-    [InputControl(name = "Grip", layout = "Axis", displayName = "Grip", format = "BYTE",parameters = "normalize,normalizeMax = 0.5, normalizeMin=0", usage = "Grip")]
+    [InputControl(
+        name = "Grip",
+        layout = "Axis",
+        displayName = "Grip",
+        format = "BYTE",
+        parameters = "normalize,normalizeMax = 0.5, normalizeMin=0",
+        usage = "Grip"
+    )]
     public byte grip_;
 
     [InputControl(name = "Primary2DAxis", format = "VC2B", layout = "Stick")]
-    [InputControl(name = "Primary2DAxis/x", defaultState = 127, format = "BYTE",
+    [InputControl(
+        name = "Primary2DAxis/x",
+        defaultState = 127,
+        format = "BYTE",
         offset = 0,
-        parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+        parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5"
+    )]
     public byte x_;
 
-    [InputControl(name = "Primary2DAxis/y", defaultState = 127, format = "BYTE",
+    [InputControl(
+        name = "Primary2DAxis/y",
+        defaultState = 127,
+        format = "BYTE",
         offset = 1,
-        parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5")]
+        parameters = "normalize,normalizeMin=0,normalizeMax=1,normalizeZero=0.5"
+    )]
     public byte y_;
 
     [InputControl(name = "deviceRotation", layout = "Quaternion", displayName = "SVRRotation")]
@@ -51,21 +113,34 @@ public struct SVRDeviceState : IInputStateTypeInfo
 
     [InputControl(name = "trackingState", layout = "Integer", displayName = "SVRTrackingState")]
     public InputTrackingState tracking_state_;
-    
-    [InputControl(name = "deviceVelocity", layout = "Vector3", displayName = "DeviceVelocity", usage = "controllerVelocity")]
+
+    [InputControl(
+        name = "deviceVelocity",
+        layout = "Vector3",
+        displayName = "DeviceVelocity",
+        usage = "controllerVelocity"
+    )]
     public UnityEngine.Vector3 deviceVelocity_;
 
-    [InputControl(name = "deviceAngularVelocity", layout = "Vector3", displayName = "DeviceAngularVelocity", usage = "controllerAngularVelocity")]
+    [InputControl(
+        name = "deviceAngularVelocity",
+        layout = "Vector3",
+        displayName = "DeviceAngularVelocity",
+        usage = "controllerAngularVelocity"
+    )]
     public UnityEngine.Vector3 deviceAngularVelocity_;
 }
 
 #if UNITY_EDITOR
 [InitializeOnLoad] // Call static class constructor in editor.
 #endif
-[InputControlLayout(stateType = typeof(SVRDeviceState), displayName = "SVRController", commonUsages = new[] { "LeftHand", "RightHand" })]
+[InputControlLayout(
+    stateType = typeof(SVRDeviceState),
+    displayName = "SVRController",
+    commonUsages = new[] { "LeftHand", "RightHand" }
+)]
 public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiver
 {
-
 #if UNITY_EDITOR
     static SVRInputDevice()
     {
@@ -91,16 +166,17 @@ public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiv
         //       Check out the API documentation for InputSystem.onFindLayoutForDevice and
         //       for InputSystem.RegisterLayoutBuilder.
         InputSystem.RegisterLayout<SVRInputDevice>(
-            matches: new InputDeviceMatcher()
-                .WithInterface("SVRInputDevice"));
+            matches: new InputDeviceMatcher().WithInterface("SVRInputDevice")
+        );
     }
+
     public ButtonControl PrimaryButton { get; protected set; }
     public ButtonControl SecondaryButton { get; protected set; }
     public ButtonControl MenuButton { get; protected set; }
     public ButtonControl TriggerButton { get; protected set; }
     public ButtonControl GripButton { get; protected set; }
-    public AxisControl Trigger { get; protected set;}
-    public AxisControl Grip { get; protected set;}
+    public AxisControl Trigger { get; protected set; }
+    public AxisControl Grip { get; protected set; }
     public StickControl Stick { get; protected set; }
     public Vector3Control DeviceVelocity { get; protected set; }
     public Vector3Control DeviceAngularVelocity { get; protected set; }
@@ -110,7 +186,7 @@ public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiv
         base.FinishSetup();
 
         PrimaryButton = GetChildControl<ButtonControl>("PrimaryButton");
-        SecondaryButton= GetChildControl<ButtonControl>("SecondaryButton");
+        SecondaryButton = GetChildControl<ButtonControl>("SecondaryButton");
         MenuButton = GetChildControl<ButtonControl>("MenuButton");
         Trigger = GetChildControl<AxisControl>("Trigger");
         Grip = GetChildControl<AxisControl>("Grip");
@@ -126,15 +202,17 @@ public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiv
         DeviceVelocity = GetChildControl<Vector3Control>("deviceVelocity");
         DeviceAngularVelocity = GetChildControl<Vector3Control>("deviceAngularVelocity");
     }
-    protected override void OnAdded() {
-    }
+
+    protected override void OnAdded() { }
 
     public static SVRInputDevice current { get; private set; }
+
     public override void MakeCurrent()
     {
         base.MakeCurrent();
         current = this;
     }
+
     protected override void OnRemoved()
     {
         base.OnRemoved();
@@ -142,10 +220,7 @@ public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiv
             current = null;
     }
 
-    public void OnUpdate()
-    {
-    }
-
+    public void OnUpdate() { }
 
 #if UNITY_EDITOR
     [MenuItem("Tools/SVRInputDevice/Create Device")]
@@ -153,11 +228,9 @@ public class SVRInputDevice : XRControllerWithRumble, IInputUpdateCallbackReceiv
     {
         // This is the code that you would normally run at the point where
         // you discover devices of your custom type.
-        InputSystem.AddDevice(new InputDeviceDescription
-        {
-            interfaceName = "SVRInputDevice",
-            product = "DeepMirror"
-        });
+        InputSystem.AddDevice(
+            new InputDeviceDescription { interfaceName = "SVRInputDevice", product = "DeepMirror" }
+        );
     }
 
     // For completeness sake, let's also add code to remove one instance of our

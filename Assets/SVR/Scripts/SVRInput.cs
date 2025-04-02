@@ -80,7 +80,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
             return false;
 
 #if INPUT_SYSTEM_1_1_OR_NEWER || INPUT_SYSTEM_1_1_PREVIEW // 1.1.0-preview.2 or newer, including pre-release
-                return action.phase == InputActionPhase.Performed;
+        return action.phase == InputActionPhase.Performed;
 #else
         if (action.activeControl is ButtonControl buttonControl)
             return buttonControl.isPressed;
@@ -94,7 +94,6 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     class ControllerData
     {
-
         private Vector3 position = Vector3.zero;
         private Quaternion rotation = Quaternion.identity;
         private bool primary_value = false;
@@ -500,12 +499,18 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         if (thumbstick == Axis2D.LThumbstick)
         {
-            Vector2 axisVal = new Vector2(instance.left_controller_data.XAxis, instance.left_controller_data.YAxis);
+            Vector2 axisVal = new Vector2(
+                instance.left_controller_data.XAxis,
+                instance.left_controller_data.YAxis
+            );
             return axisVal;
         }
         else
         {
-            Vector2 axisVal = new Vector2(instance.right_controller_data.XAxis, instance.right_controller_data.YAxis);
+            Vector2 axisVal = new Vector2(
+                instance.right_controller_data.XAxis,
+                instance.right_controller_data.YAxis
+            );
             return axisVal;
         }
     }
@@ -544,7 +549,12 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         return instance.svrControllerManager.IsControllerConnected(chirality);
     }
 
-    public static void TriggerHaptic(int chirality, float amplitude, float frequency, double duration_seconds)
+    public static void TriggerHaptic(
+        int chirality,
+        float amplitude,
+        float frequency,
+        double duration_seconds
+    )
     {
         instance.svrControllerManager.SVRHaptic(chirality, amplitude, frequency, duration_seconds);
     }
@@ -567,7 +577,6 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     public void OnRightControllerMenuButton(InputAction.CallbackContext context)
     {
         right_controller_data.MenuButton = context.action.triggered;
-
     }
 
     public void OnLeftControllerPosition(InputAction.CallbackContext context)
@@ -585,6 +594,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         Debug.Log("Primary Call");
         left_controller_data.PrimaryButton = context.action.triggered;
     }
+
     public void OnRightControllerPrimaryButton(InputAction.CallbackContext context)
     {
         right_controller_data.PrimaryButton = context.action.triggered;
@@ -594,6 +604,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         left_controller_data.Rotation = context.action.ReadValue<Quaternion>();
     }
+
     public void OnRightControllerRotation(InputAction.CallbackContext context)
     {
         right_controller_data.Rotation = context.action.ReadValue<Quaternion>();
@@ -627,6 +638,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         left_controller_data.TrackState = context.action.ReadValue<int>();
     }
+
     public void OnRightControllerTrackingState(InputAction.CallbackContext context)
     {
         right_controller_data.TrackState = context.action.ReadValue<int>();
@@ -699,17 +711,11 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         right_controller_data = new ControllerData();
     }
 
-
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    void Start() { }
 
     // Update is called once per frame
-    void Update()
-    {
-    }
+    void Update() { }
 
     void OnEnable()
     {
@@ -772,9 +778,9 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     }
 
     /**
-     * In case controllers may have latency, this api tries to predict 
+     * In case controllers may have latency, this api tries to predict
      *  pose of controllers in certain time.
-     *  
+     *
      *  predictTime: predicted time in nano seconds
      */
 

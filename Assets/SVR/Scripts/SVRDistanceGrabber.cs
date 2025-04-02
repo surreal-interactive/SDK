@@ -6,353 +6,396 @@ using UnityEngine;
 public class SVRDistanceGrabber : SVRGrabber
 {
     // Radius of sphere used in spherecast from hand along forward ray to find target object.
-        [SerializeField]
-        float m_spherecastRadius = 0;
+    [SerializeField]
+    float m_spherecastRadius = 0;
 
-        // Distance below which no-snap objects won't be teleported, but will instead be left
-        // where they are in relation to the hand.
-        [SerializeField]
-        float m_noSnapThreshhold = 0.05f;
+    // Distance below which no-snap objects won't be teleported, but will instead be left
+    // where they are in relation to the hand.
+    [SerializeField]
+    float m_noSnapThreshhold = 0.05f;
 
-        [SerializeField]
-        bool m_useSpherecast;
+    [SerializeField]
+    bool m_useSpherecast;
 
-        public bool UseSpherecast
+    public bool UseSpherecast
+    {
+        get { return m_useSpherecast; }
+        set
         {
-            get { return m_useSpherecast; }
-            set
-            {
-                m_useSpherecast = value;
-                GrabVolumeEnable(!m_useSpherecast);
-            }
+            m_useSpherecast = value;
+            GrabVolumeEnable(!m_useSpherecast);
+        }
+    }
+
+    // Public to allow changing in demo.
+    [SerializeField]
+    public bool m_preventGrabThroughWalls;
+
+    [SerializeField]
+    float m_objectPullVelocity = 10.0f;
+
+    float m_objectPullMaxRotationRate = 360.0f; // max rotation rate in degrees per second
+
+    bool m_movingObjectToHand = false;
+
+    // Objects can be distance grabbed up to this distance from the hand.
+    [SerializeField]
+    float m_maxGrabDistance;
+
+    // Only allow grabbing objects in this layer.
+    // NOTE: you can use the value -1 to attempt to grab everything.
+    [SerializeField]
+    int m_grabObjectsInLayer = 0;
+
+    [SerializeField]
+    int m_obstructionLayer = 0;
+
+    SVRDistanceGrabber m_otherHand;
+
+    protected SVRDistanceGrabbable m_target;
+
+    // Tracked separately from m_target, because we support child colliders of a DistanceGrabbable.
+    protected Collider m_targetCollider;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        // Basic hack to guess at max grab distance based on player size.
+        // Note that there's no major downside to making this value too high, as objects
+        // outside the player's grabbable trigger volume will not be eligible targets regardless.
+        Collider sc = m_player.GetComponentInChildren<Collider>();
+        if (sc != null)
+        {
+            m_maxGrabDistance = sc.bounds.size.z * 0.5f + 3.0f;
+        }
+        else
+        {
+            m_maxGrabDistance = 12.0f;
         }
 
-        // Public to allow changing in demo.
-        [SerializeField]
-        public bool m_preventGrabThroughWalls;
-
-        [SerializeField]
-        float m_objectPullVelocity = 10.0f;
-
-        float m_objectPullMaxRotationRate = 360.0f; // max rotation rate in degrees per second
-
-        bool m_movingObjectToHand = false;
-
-        // Objects can be distance grabbed up to this distance from the hand.
-        [SerializeField]
-        float m_maxGrabDistance;
-
-        // Only allow grabbing objects in this layer.
-        // NOTE: you can use the value -1 to attempt to grab everything.
-        [SerializeField]
-        int m_grabObjectsInLayer = 0;
-
-        [SerializeField]
-        int m_obstructionLayer = 0;
-
-        SVRDistanceGrabber m_otherHand;
-
-        protected SVRDistanceGrabbable m_target;
-
-        // Tracked separately from m_target, because we support child colliders of a DistanceGrabbable.
-        protected Collider m_targetCollider;
-
-        protected override void Start()
+        if (m_parentHeldObject == true)
         {
-            base.Start();
+            Debug.LogError(
+                "m_parentHeldObject incompatible with DistanceGrabber. Setting to false."
+            );
+            m_parentHeldObject = false;
+        }
 
-            // Basic hack to guess at max grab distance based on player size.
-            // Note that there's no major downside to making this value too high, as objects
-            // outside the player's grabbable trigger volume will not be eligible targets regardless.
-            Collider sc = m_player.GetComponentInChildren<Collider>();
-            if (sc != null)
+        SVRDistanceGrabber[] grabbers = FindObjectsOfType<SVRDistanceGrabber>();
+        for (int i = 0; i < grabbers.Length; ++i)
+        {
+            if (grabbers[i] != this)
+                m_otherHand = grabbers[i];
+        }
+
+        Debug.Assert(m_otherHand != null);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        Debug.DrawRay(transform.position, transform.forward, Color.red, 0.1f);
+
+        SVRDistanceGrabbable target;
+        Collider targetColl;
+        FindTarget(out target, out targetColl);
+
+        if (target != m_target)
+        {
+            if (m_target != null)
             {
-                m_maxGrabDistance = sc.bounds.size.z * 0.5f + 3.0f;
+                m_target.Targeted = m_otherHand.m_target == m_target;
+            }
+
+            m_target = target;
+            m_targetCollider = targetColl;
+            if (m_target != null)
+            {
+                m_target.Targeted = true;
+            }
+        }
+    }
+
+    protected override void GrabBegin()
+    {
+        SVRDistanceGrabbable closestGrabbable = m_target;
+        Collider closestGrabbableCollider = m_targetCollider;
+
+        GrabVolumeEnable(false);
+
+        if (closestGrabbable != null)
+        {
+            if (closestGrabbable.isGrabbed)
+            {
+                ((SVRDistanceGrabber)closestGrabbable.grabbedBy).OffhandGrabbed(closestGrabbable);
+            }
+
+            m_grabbedObj = closestGrabbable;
+            m_grabbedObj.GrabBegin(this, closestGrabbableCollider);
+            SetPlayerIgnoreCollision(m_grabbedObj.gameObject, true);
+
+            m_movingObjectToHand = true;
+            m_lastPos = transform.position;
+            m_lastRot = transform.rotation;
+
+            // If it's within a certain distance respect the no-snap.
+            Vector3 closestPointOnBounds = closestGrabbableCollider.ClosestPointOnBounds(
+                m_gripTransform.position
+            );
+            if (
+                !m_grabbedObj.snapPosition
+                && !m_grabbedObj.snapOrientation
+                && m_noSnapThreshhold > 0.0f
+                && (closestPointOnBounds - m_gripTransform.position).magnitude < m_noSnapThreshhold
+            )
+            {
+                Vector3 relPos = m_grabbedObj.transform.position - transform.position;
+                m_movingObjectToHand = false;
+                relPos = Quaternion.Inverse(transform.rotation) * relPos;
+                m_grabbedObjectPosOff = relPos;
+                Quaternion relOri =
+                    Quaternion.Inverse(transform.rotation) * m_grabbedObj.transform.rotation;
+                m_grabbedObjectRotOff = relOri;
             }
             else
             {
-                m_maxGrabDistance = 12.0f;
-            }
-
-            if (m_parentHeldObject == true)
-            {
-                Debug.LogError("m_parentHeldObject incompatible with DistanceGrabber. Setting to false.");
-                m_parentHeldObject = false;
-            }
-
-            SVRDistanceGrabber[] grabbers = FindObjectsOfType<SVRDistanceGrabber>();
-            for (int i = 0; i < grabbers.Length; ++i)
-            {
-                if (grabbers[i] != this) m_otherHand = grabbers[i];
-            }
-
-            Debug.Assert(m_otherHand != null);
-
-
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            Debug.DrawRay(transform.position, transform.forward, Color.red, 0.1f);
-
-            SVRDistanceGrabbable target;
-            Collider targetColl;
-            FindTarget(out target, out targetColl);
-
-            if (target != m_target)
-            {
-                if (m_target != null)
+                // Set up offsets for grabbed object desired position relative to hand.
+                m_grabbedObjectPosOff = m_gripTransform.localPosition;
+                if (m_grabbedObj.snapOffset)
                 {
-                    m_target.Targeted = m_otherHand.m_target == m_target;
+                    Vector3 snapOffset = m_grabbedObj.snapOffset.position;
+                    if (m_controllerType == SVRControllerType.LController)
+                        snapOffset.x = -snapOffset.x;
+                    m_grabbedObjectPosOff += snapOffset;
                 }
 
-                m_target = target;
-                m_targetCollider = targetColl;
-                if (m_target != null)
+                m_grabbedObjectRotOff = m_gripTransform.localRotation;
+                if (m_grabbedObj.snapOffset)
                 {
-                    m_target.Targeted = true;
+                    m_grabbedObjectRotOff =
+                        m_grabbedObj.snapOffset.rotation * m_grabbedObjectRotOff;
                 }
             }
         }
+    }
 
-        protected override void GrabBegin()
+    protected override void MoveGrabbedObject(
+        Vector3 pos,
+        Quaternion rot,
+        bool forceTeleport = false
+    )
+    {
+        if (m_grabbedObj == null)
         {
-            SVRDistanceGrabbable closestGrabbable = m_target;
-            Collider closestGrabbableCollider = m_targetCollider;
+            return;
+        }
 
-            GrabVolumeEnable(false);
+        Rigidbody grabbedRigidbody = m_grabbedObj.grabbedRigidbody;
+        Vector3 grabbablePosition = pos + rot * m_grabbedObjectPosOff;
+        Quaternion grabbableRotation = rot * m_grabbedObjectRotOff;
 
-            if (closestGrabbable != null)
+        if (m_movingObjectToHand)
+        {
+            float travel = m_objectPullVelocity * Time.deltaTime;
+            Vector3 dir = grabbablePosition - m_grabbedObj.transform.position;
+            if (travel * travel * 1.1f > dir.sqrMagnitude)
             {
-                if (closestGrabbable.isGrabbed)
-                {
-                    ((SVRDistanceGrabber)closestGrabbable.grabbedBy).OffhandGrabbed(closestGrabbable);
-                }
+                m_movingObjectToHand = false;
+            }
+            else
+            {
+                dir.Normalize();
+                grabbablePosition = m_grabbedObj.transform.position + dir * travel;
+                grabbableRotation = Quaternion.RotateTowards(
+                    m_grabbedObj.transform.rotation,
+                    grabbableRotation,
+                    m_objectPullMaxRotationRate * Time.deltaTime
+                );
+            }
+        }
 
-                m_grabbedObj = closestGrabbable;
-                m_grabbedObj.GrabBegin(this, closestGrabbableCollider);
-                SetPlayerIgnoreCollision(m_grabbedObj.gameObject, true);
+        grabbedRigidbody.MovePosition(grabbablePosition);
+        grabbedRigidbody.MoveRotation(grabbableRotation);
+    }
 
-                m_movingObjectToHand = true;
-                m_lastPos = transform.position;
-                m_lastRot = transform.rotation;
+    private static SVRDistanceGrabbable HitInfoToGrabbable(RaycastHit hitInfo)
+    {
+        if (hitInfo.collider != null)
+        {
+            GameObject go = hitInfo.collider.gameObject;
+            return go.GetComponent<SVRDistanceGrabbable>()
+                ?? go.GetComponentInParent<SVRDistanceGrabbable>();
+        }
 
-                // If it's within a certain distance respect the no-snap.
-                Vector3 closestPointOnBounds = closestGrabbableCollider.ClosestPointOnBounds(m_gripTransform.position);
-                if (!m_grabbedObj.snapPosition && !m_grabbedObj.snapOrientation && m_noSnapThreshhold > 0.0f &&
-                    (closestPointOnBounds - m_gripTransform.position).magnitude < m_noSnapThreshhold)
+        return null;
+    }
+
+    protected bool FindTarget(out SVRDistanceGrabbable dgOut, out Collider collOut)
+    {
+        dgOut = null;
+        collOut = null;
+        float closestMagSq = float.MaxValue;
+
+        // First test for objects within the grab volume, if we're using those.
+        // (Some usage of DistanceGrabber will not use grab volumes, and will only
+        // use spherecasts, and that's supported.)
+        foreach (SVRGrabbable cg in m_grabCandidates.Keys)
+        {
+            SVRDistanceGrabbable grabbable = cg as SVRDistanceGrabbable;
+            bool canGrab =
+                grabbable != null
+                && grabbable.InRange
+                && !(grabbable.isGrabbed && !grabbable.allowOffhandGrab);
+            if (canGrab && m_grabObjectsInLayer >= 0)
+                canGrab = grabbable.gameObject.layer == m_grabObjectsInLayer;
+            if (!canGrab)
+            {
+                continue;
+            }
+
+            for (int j = 0; j < grabbable.grabPoints.Length; ++j)
+            {
+                Collider grabbableCollider = grabbable.grabPoints[j];
+                // Store the closest grabbable
+                Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(
+                    m_gripTransform.position
+                );
+                float grabbableMagSq = (
+                    m_gripTransform.position - closestPointOnBounds
+                ).sqrMagnitude;
+
+                if (grabbableMagSq < closestMagSq)
                 {
-                    Vector3 relPos = m_grabbedObj.transform.position - transform.position;
-                    m_movingObjectToHand = false;
-                    relPos = Quaternion.Inverse(transform.rotation) * relPos;
-                    m_grabbedObjectPosOff = relPos;
-                    Quaternion relOri = Quaternion.Inverse(transform.rotation) * m_grabbedObj.transform.rotation;
-                    m_grabbedObjectRotOff = relOri;
-                }
-                else
-                {
-                    // Set up offsets for grabbed object desired position relative to hand.
-                    m_grabbedObjectPosOff = m_gripTransform.localPosition;
-                    if (m_grabbedObj.snapOffset)
+                    bool accept = true;
+                    if (m_preventGrabThroughWalls)
                     {
-                        Vector3 snapOffset = m_grabbedObj.snapOffset.position;
-                        if (m_controllerType == SVRControllerType.LController) snapOffset.x = -snapOffset.x;
-                        m_grabbedObjectPosOff += snapOffset;
-                    }
+                        // NOTE: if this raycast fails, ideally we'd try other rays near the edges of the object, especially for large objects.
+                        // NOTE 2: todo optimization: sort the objects before performing any raycasts.
+                        Ray ray = new Ray();
+                        ray.direction = grabbable.transform.position - m_gripTransform.position;
+                        ray.origin = m_gripTransform.position;
+                        RaycastHit obstructionHitInfo;
+                        Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.1f);
 
-                    m_grabbedObjectRotOff = m_gripTransform.localRotation;
-                    if (m_grabbedObj.snapOffset)
-                    {
-                        m_grabbedObjectRotOff = m_grabbedObj.snapOffset.rotation * m_grabbedObjectRotOff;
-                    }
-                }
-            }
-        }
-
-        protected override void MoveGrabbedObject(Vector3 pos, Quaternion rot, bool forceTeleport = false)
-        {
-            if (m_grabbedObj == null)
-            {
-                return;
-            }
-
-            Rigidbody grabbedRigidbody = m_grabbedObj.grabbedRigidbody;
-            Vector3 grabbablePosition = pos + rot * m_grabbedObjectPosOff;
-            Quaternion grabbableRotation = rot * m_grabbedObjectRotOff;
-
-            if (m_movingObjectToHand)
-            {
-                float travel = m_objectPullVelocity * Time.deltaTime;
-                Vector3 dir = grabbablePosition - m_grabbedObj.transform.position;
-                if (travel * travel * 1.1f > dir.sqrMagnitude)
-                {
-                    m_movingObjectToHand = false;
-                }
-                else
-                {
-                    dir.Normalize();
-                    grabbablePosition = m_grabbedObj.transform.position + dir * travel;
-                    grabbableRotation = Quaternion.RotateTowards(m_grabbedObj.transform.rotation, grabbableRotation,
-                        m_objectPullMaxRotationRate * Time.deltaTime);
-                }
-            }
-
-            grabbedRigidbody.MovePosition(grabbablePosition);
-            grabbedRigidbody.MoveRotation(grabbableRotation);
-        }
-
-        static private SVRDistanceGrabbable HitInfoToGrabbable(RaycastHit hitInfo)
-        {
-            if (hitInfo.collider != null)
-            {
-                GameObject go = hitInfo.collider.gameObject;
-                return go.GetComponent<SVRDistanceGrabbable>() ?? go.GetComponentInParent<SVRDistanceGrabbable>();
-            }
-
-            return null;
-        }
-
-        protected bool FindTarget(out SVRDistanceGrabbable dgOut, out Collider collOut)
-        {
-            dgOut = null;
-            collOut = null;
-            float closestMagSq = float.MaxValue;
-
-            // First test for objects within the grab volume, if we're using those.
-            // (Some usage of DistanceGrabber will not use grab volumes, and will only
-            // use spherecasts, and that's supported.)
-            foreach (SVRGrabbable cg in m_grabCandidates.Keys)
-            {
-                SVRDistanceGrabbable grabbable = cg as SVRDistanceGrabbable;
-                bool canGrab = grabbable != null && grabbable.InRange &&
-                               !(grabbable.isGrabbed && !grabbable.allowOffhandGrab);
-                if (canGrab && m_grabObjectsInLayer >= 0) canGrab = grabbable.gameObject.layer == m_grabObjectsInLayer;
-                if (!canGrab)
-                {
-                    continue;
-                }
-
-                for (int j = 0; j < grabbable.grabPoints.Length; ++j)
-                {
-                    Collider grabbableCollider = grabbable.grabPoints[j];
-                    // Store the closest grabbable
-                    Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(m_gripTransform.position);
-                    float grabbableMagSq = (m_gripTransform.position - closestPointOnBounds).sqrMagnitude;
-
-                    if (grabbableMagSq < closestMagSq)
-                    {
-                        bool accept = true;
-                        if (m_preventGrabThroughWalls)
+                        if (
+                            Physics.Raycast(
+                                ray,
+                                out obstructionHitInfo,
+                                m_maxGrabDistance,
+                                1 << m_obstructionLayer,
+                                QueryTriggerInteraction.Ignore
+                            )
+                        )
                         {
-                            // NOTE: if this raycast fails, ideally we'd try other rays near the edges of the object, especially for large objects.
-                            // NOTE 2: todo optimization: sort the objects before performing any raycasts.
-                            Ray ray = new Ray();
-                            ray.direction = grabbable.transform.position - m_gripTransform.position;
-                            ray.origin = m_gripTransform.position;
-                            RaycastHit obstructionHitInfo;
-                            Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.1f);
-
-                            if (Physics.Raycast(ray, out obstructionHitInfo, m_maxGrabDistance, 1 << m_obstructionLayer,
-                                    QueryTriggerInteraction.Ignore))
+                            float distToObject = (
+                                grabbableCollider.ClosestPointOnBounds(m_gripTransform.position)
+                                - m_gripTransform.position
+                            ).magnitude;
+                            if (distToObject > obstructionHitInfo.distance * 1.1)
                             {
-                                float distToObject = (grabbableCollider.ClosestPointOnBounds(m_gripTransform.position) -
-                                                      m_gripTransform.position).magnitude;
-                                if (distToObject > obstructionHitInfo.distance * 1.1)
-                                {
-                                    accept = false;
-                                }
+                                accept = false;
                             }
                         }
+                    }
 
-                        if (accept)
-                        {
-                            closestMagSq = grabbableMagSq;
-                            dgOut = grabbable;
-                            collOut = grabbableCollider;
-                        }
+                    if (accept)
+                    {
+                        closestMagSq = grabbableMagSq;
+                        dgOut = grabbable;
+                        collOut = grabbableCollider;
                     }
                 }
             }
-
-            if (dgOut == null && m_useSpherecast)
-            {
-                return FindTargetWithSpherecast(out dgOut, out collOut);
-            }
-
-            return dgOut != null;
         }
 
-        protected bool FindTargetWithSpherecast(out SVRDistanceGrabbable dgOut, out Collider collOut)
+        if (dgOut == null && m_useSpherecast)
         {
-            dgOut = null;
-            collOut = null;
-            Ray ray = new Ray(m_gripTransform.position, m_gripTransform.forward);
-            RaycastHit hitInfo;
+            return FindTargetWithSpherecast(out dgOut, out collOut);
+        }
 
-            // If no objects in grab volume, raycast.
-            // Potential optimization:
-            // In DistanceGrabbable.RefreshCrosshairs, we could move the object between collision layers.
-            // If it's in range, it would move into the layer DistanceGrabber.m_grabObjectsInLayer,
-            // and if out of range, into another layer so it's ignored by DistanceGrabber's SphereCast.
-            // However, we're limiting the SphereCast by m_maxGrabDistance, so the optimization doesn't seem
-            // essential.
-            int layer = (m_grabObjectsInLayer == -1) ? ~0 : 1 << m_grabObjectsInLayer;
-            if (Physics.SphereCast(ray, m_spherecastRadius, out hitInfo, m_maxGrabDistance, layer))
+        return dgOut != null;
+    }
+
+    protected bool FindTargetWithSpherecast(out SVRDistanceGrabbable dgOut, out Collider collOut)
+    {
+        dgOut = null;
+        collOut = null;
+        Ray ray = new Ray(m_gripTransform.position, m_gripTransform.forward);
+        RaycastHit hitInfo;
+
+        // If no objects in grab volume, raycast.
+        // Potential optimization:
+        // In DistanceGrabbable.RefreshCrosshairs, we could move the object between collision layers.
+        // If it's in range, it would move into the layer DistanceGrabber.m_grabObjectsInLayer,
+        // and if out of range, into another layer so it's ignored by DistanceGrabber's SphereCast.
+        // However, we're limiting the SphereCast by m_maxGrabDistance, so the optimization doesn't seem
+        // essential.
+        int layer = (m_grabObjectsInLayer == -1) ? ~0 : 1 << m_grabObjectsInLayer;
+        if (Physics.SphereCast(ray, m_spherecastRadius, out hitInfo, m_maxGrabDistance, layer))
+        {
+            SVRDistanceGrabbable grabbable = null;
+            Collider hitCollider = null;
+            if (hitInfo.collider != null)
             {
-                SVRDistanceGrabbable grabbable = null;
-                Collider hitCollider = null;
-                if (hitInfo.collider != null)
+                grabbable =
+                    hitInfo.collider.gameObject.GetComponentInParent<SVRDistanceGrabbable>();
+                hitCollider = grabbable == null ? null : hitInfo.collider;
+                if (grabbable)
                 {
-                    grabbable = hitInfo.collider.gameObject.GetComponentInParent<SVRDistanceGrabbable>();
-                    hitCollider = grabbable == null ? null : hitInfo.collider;
-                    if (grabbable)
-                    {
-                        dgOut = grabbable;
-                        collOut = hitCollider;
-                    }
-                }
-
-                if (grabbable != null && m_preventGrabThroughWalls)
-                {
-                    // Found a valid hit. Now test to see if it's blocked by collision.
-                    RaycastHit obstructionHitInfo;
-                    ray.direction = hitInfo.point - m_gripTransform.position;
-
                     dgOut = grabbable;
                     collOut = hitCollider;
-                    if (Physics.Raycast(ray, out obstructionHitInfo, m_maxGrabDistance, 1 << m_obstructionLayer,
-                            QueryTriggerInteraction.Ignore))
-                    {
-                        SVRDistanceGrabbable obstruction = null;
-                        if (hitInfo.collider != null)
-                        {
-                            obstruction =
-                                obstructionHitInfo.collider.gameObject.GetComponentInParent<SVRDistanceGrabbable>();
-                        }
-
-                        if (obstruction != grabbable && obstructionHitInfo.distance < hitInfo.distance)
-                        {
-                            dgOut = null;
-                            collOut = null;
-                        }
-                    }
                 }
             }
 
-            return dgOut != null;
+            if (grabbable != null && m_preventGrabThroughWalls)
+            {
+                // Found a valid hit. Now test to see if it's blocked by collision.
+                RaycastHit obstructionHitInfo;
+                ray.direction = hitInfo.point - m_gripTransform.position;
+
+                dgOut = grabbable;
+                collOut = hitCollider;
+                if (
+                    Physics.Raycast(
+                        ray,
+                        out obstructionHitInfo,
+                        m_maxGrabDistance,
+                        1 << m_obstructionLayer,
+                        QueryTriggerInteraction.Ignore
+                    )
+                )
+                {
+                    SVRDistanceGrabbable obstruction = null;
+                    if (hitInfo.collider != null)
+                    {
+                        obstruction =
+                            obstructionHitInfo.collider.gameObject.GetComponentInParent<SVRDistanceGrabbable>();
+                    }
+
+                    if (obstruction != grabbable && obstructionHitInfo.distance < hitInfo.distance)
+                    {
+                        dgOut = null;
+                        collOut = null;
+                    }
+                }
+            }
         }
 
-        protected override void GrabVolumeEnable(bool enabled)
-        {
-            if (m_useSpherecast) enabled = false;
-            base.GrabVolumeEnable(enabled);
-        }
+        return dgOut != null;
+    }
 
-        // Just here to allow calling of a protected member function.
-        protected override void OffhandGrabbed(SVRGrabbable grabbable)
-        {
-            base.OffhandGrabbed(grabbable);
-        }
+    protected override void GrabVolumeEnable(bool enabled)
+    {
+        if (m_useSpherecast)
+            enabled = false;
+        base.GrabVolumeEnable(enabled);
+    }
+
+    // Just here to allow calling of a protected member function.
+    protected override void OffhandGrabbed(SVRGrabbable grabbable)
+    {
+        base.OffhandGrabbed(grabbable);
+    }
 }

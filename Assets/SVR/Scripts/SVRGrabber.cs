@@ -17,7 +17,6 @@ public class SVRGrabber : MonoBehaviour
     [SerializeField]
     protected bool m_parentHeldObject = false;
 
-
     // Child/attached transforms of the grabber, indicating where to snap held objects to (if you snap them).
     // Also used for ranking grab targets in case of multiple candidates.
     [SerializeField]
@@ -60,10 +59,7 @@ public class SVRGrabber : MonoBehaviour
 
     public void ForceRelease(SVRGrabbable grabbable)
     {
-        bool canRelease = (
-            (m_grabbedObj != null) &&
-            (m_grabbedObj == grabbable)
-        );
+        bool canRelease = ((m_grabbedObj != null) && (m_grabbedObj == grabbable));
         if (canRelease)
         {
             GrabEnd();
@@ -74,7 +70,6 @@ public class SVRGrabber : MonoBehaviour
     {
         m_anchorOffsetPosition = transform.localPosition;
         m_anchorOffsetRotation = transform.localRotation;
-
     }
 
     protected virtual void Start()
@@ -112,7 +107,6 @@ public class SVRGrabber : MonoBehaviour
         Vector3 destPos = m_parentTransform.TransformPoint(m_anchorOffsetPosition);
         Quaternion destRot = m_parentTransform.rotation * m_anchorOffsetRotation;
 
-
         if (!m_parentHeldObject)
         {
             MoveGrabbedObject(destPos, destRot);
@@ -146,9 +140,11 @@ public class SVRGrabber : MonoBehaviour
     void OnTriggerEnter(Collider otherCollider)
     {
         // Get the grab trigger
-        SVRGrabbable grabbable = otherCollider.GetComponent<SVRGrabbable>() ??
-                                 otherCollider.GetComponentInParent<SVRGrabbable>();
-        if (grabbable == null) return;
+        SVRGrabbable grabbable =
+            otherCollider.GetComponent<SVRGrabbable>()
+            ?? otherCollider.GetComponentInParent<SVRGrabbable>();
+        if (grabbable == null)
+            return;
 
         // Add the grabbable
         int refCount = 0;
@@ -158,9 +154,11 @@ public class SVRGrabber : MonoBehaviour
 
     void OnTriggerExit(Collider otherCollider)
     {
-        SVRGrabbable grabbable = otherCollider.GetComponent<SVRGrabbable>() ??
-                                 otherCollider.GetComponentInParent<SVRGrabbable>();
-        if (grabbable == null) return;
+        SVRGrabbable grabbable =
+            otherCollider.GetComponent<SVRGrabbable>()
+            ?? otherCollider.GetComponentInParent<SVRGrabbable>();
+        if (grabbable == null)
+            return;
 
         // Remove the grabbable
         int refCount = 0;
@@ -211,8 +209,12 @@ public class SVRGrabber : MonoBehaviour
             {
                 Collider grabbableCollider = grabbable.grabPoints[j];
                 // Store the closest grabbable
-                Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(m_gripTransform.position);
-                float grabbableMagSq = (m_gripTransform.position - closestPointOnBounds).sqrMagnitude;
+                Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(
+                    m_gripTransform.position
+                );
+                float grabbableMagSq = (
+                    m_gripTransform.position - closestPointOnBounds
+                ).sqrMagnitude;
                 if (grabbableMagSq < closestMagSq)
                 {
                     closestMagSq = grabbableMagSq;
@@ -264,12 +266,14 @@ public class SVRGrabber : MonoBehaviour
                 m_grabbedObjectRotOff = m_gripTransform.localRotation;
                 if (m_grabbedObj.snapOffset)
                 {
-                    m_grabbedObjectRotOff = m_grabbedObj.snapOffset.rotation * m_grabbedObjectRotOff;
+                    m_grabbedObjectRotOff =
+                        m_grabbedObj.snapOffset.rotation * m_grabbedObjectRotOff;
                 }
             }
             else
             {
-                Quaternion relOri = Quaternion.Inverse(transform.rotation) * m_grabbedObj.transform.rotation;
+                Quaternion relOri =
+                    Quaternion.Inverse(transform.rotation) * m_grabbedObj.transform.rotation;
                 m_grabbedObjectRotOff = relOri;
             }
 
@@ -289,7 +293,11 @@ public class SVRGrabber : MonoBehaviour
         }
     }
 
-    protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot, bool forceTeleport = false)
+    protected virtual void MoveGrabbedObject(
+        Vector3 pos,
+        Quaternion rot,
+        bool forceTeleport = false
+    )
     {
         if (m_grabbedObj == null)
         {
@@ -350,11 +358,17 @@ public class SVRGrabber : MonoBehaviour
             Vector3 linearVelocity;
             if (m_controllerType == SVRControllerType.LController)
             {
-                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetLeftControllerVelocity());
+                linearVelocity = SVRCommon.QuatMulVec(
+                    trackingSpace.rotation,
+                    SVRInput.GetLeftControllerVelocity()
+                );
             }
             else if (m_controllerType == SVRControllerType.RController)
             {
-                linearVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetRightControllerVelocity());
+                linearVelocity = SVRCommon.QuatMulVec(
+                    trackingSpace.rotation,
+                    SVRInput.GetRightControllerVelocity()
+                );
             }
             else
             {
@@ -364,11 +378,17 @@ public class SVRGrabber : MonoBehaviour
             Vector3 angularVelocity;
             if (m_controllerType == SVRControllerType.LController)
             {
-                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetLeftControllerAngularVelocity());
+                angularVelocity = SVRCommon.QuatMulVec(
+                    trackingSpace.rotation,
+                    SVRInput.GetLeftControllerAngularVelocity()
+                );
             }
             else if (m_controllerType == SVRControllerType.RController)
             {
-                angularVelocity = SVRCommon.QuatMulVec(trackingSpace.rotation, SVRInput.GetRightControllerAngularVelocity());
+                angularVelocity = SVRCommon.QuatMulVec(
+                    trackingSpace.rotation,
+                    SVRInput.GetRightControllerAngularVelocity()
+                );
             }
             else
             {
@@ -385,7 +405,8 @@ public class SVRGrabber : MonoBehaviour
     protected void GrabbableRelease(Vector3 linearVelocity, Vector3 angularVelocity)
     {
         m_grabbedObj.GrabEnd(linearVelocity, angularVelocity);
-        if (m_parentHeldObject) m_grabbedObj.transform.parent = null;
+        if (m_parentHeldObject)
+            m_grabbedObj.transform.parent = null;
         m_grabbedObj = null;
     }
 
