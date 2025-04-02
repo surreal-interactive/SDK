@@ -39,7 +39,7 @@ namespace svr {
             public byte stick_y_value;
 	    }
 
-        public delegate void ButtonCallbackDelegate(long timestamp, int hand_type, Buttons buttons);
+        public delegate void ButtonCallbackDelegate(long timestamp, int chirality, Buttons buttons);
 
         public static class Chirality
         {
@@ -55,7 +55,7 @@ namespace svr {
         public static extern void SVRStop();
 
         [DllImport("__Internal")]
-        public static extern bool SVRPollDevicePose(int hand_type, long poll_timestamp, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
+        public static extern bool SVRPollDevicePose(int chirality, long poll_timestamp, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
 
         [DllImport("__Internal")]
         public static extern void SVRSetButtonCallback(IntPtr callback_ptr);
@@ -63,16 +63,16 @@ namespace svr {
         // amplitude : [0, 1]
         // frequency : (20, 300]
         [DllImport("__Internal")]
-        public static extern bool SVRHapticContinuous(int hand_type, float amplitude, float frequency, double duration_seconds);
+        public static extern bool SVRHapticContinuous(int chirality, float amplitude, float frequency, double duration_seconds);
 
         [DllImport("__Internal")]
-        public static extern bool SVRIsConnected(int hand_type);
+        public static extern bool SVRIsConnected(int chirality);
 
         [DllImport("__Internal")]
         public static extern long SVRTimeNow();
 
         [DllImport("__Internal")]
-        public static extern void SVRRenderFinish(int hand_type, long poll_timestamp, long render_finish_timestamp);
+        public static extern void SVRRenderFinish(int chirality, long poll_timestamp, long render_finish_timestamp);
 
 #endif
     }
