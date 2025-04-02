@@ -1,34 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR;
 using System.Runtime.InteropServices;
-using System;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Layouts;
-using UnityEngine.InputSystem.Utilities;
-using UnityEngine.InputSystem.LowLevel;
-
-using UnityEngine.InputSystem.Controls;
+using UnityEngine;
 using UnityEngine.Assertions;
-namespace svr {
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Layouts;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.XR;
+
+namespace svr
+{
     public class SVRInputApi : MonoBehaviour
     {
-
-        [StructLayout(LayoutKind.Sequential)] 
-        public struct SVRPose{
-
-            public float x, y, z;
-            public float qw, qx, qy, qz;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SVRPose
+        {
+            public float x,
+                y,
+                z;
+            public float qw,
+                qx,
+                qy,
+                qz;
         }
 
-        [StructLayout(LayoutKind.Sequential)] 
-        public struct SVRVector3f {
-            public float x, y, z;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SVRVector3f
+        {
+            public float x,
+                y,
+                z;
         }
 
-        [StructLayout(LayoutKind.Sequential)] 
-        public struct Buttons{
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Buttons
+        {
             public byte primary_button;
             public byte secondary_button;
             public byte menu_button;
@@ -55,15 +64,27 @@ namespace svr {
         public static extern void SVRStop();
 
         [DllImport("__Internal")]
-        public static extern bool SVRPollDevicePose(int chirality, long poll_timestamp, ref SVRPose pose, ref SVRVector3f linear_velocity, ref SVRVector3f angular_velocity, IntPtr hand_skeletons);
+        public static extern bool SVRPollDevicePose(
+            int chirality,
+            long poll_timestamp,
+            ref SVRPose pose,
+            ref SVRVector3f linear_velocity,
+            ref SVRVector3f angular_velocity,
+            IntPtr hand_skeletons
+        );
 
         [DllImport("__Internal")]
         public static extern void SVRSetButtonCallback(IntPtr callback_ptr);
-        
+
         // amplitude : [0, 1]
         // frequency : (20, 300]
         [DllImport("__Internal")]
-        public static extern bool SVRHapticContinuous(int chirality, float amplitude, float frequency, double duration_seconds);
+        public static extern bool SVRHapticContinuous(
+            int chirality,
+            float amplitude,
+            float frequency,
+            double duration_seconds
+        );
 
         [DllImport("__Internal")]
         public static extern bool SVRIsConnected(int chirality);
@@ -72,7 +93,11 @@ namespace svr {
         public static extern long SVRTimeNow();
 
         [DllImport("__Internal")]
-        public static extern void SVRRenderFinish(int chirality, long poll_timestamp, long render_finish_timestamp);
+        public static extern void SVRRenderFinish(
+            int chirality,
+            long poll_timestamp,
+            long render_finish_timestamp
+        );
 
 #endif
     }

@@ -22,10 +22,7 @@ public class SVRManager : MonoBehaviour
     private bool prevRControllerConnected = false;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    void Start() { }
 
     // Update is called once per frame
     void Update()
@@ -46,7 +43,7 @@ public class SVRManager : MonoBehaviour
                     prevLControllerConnected = lControllerConnected;
                 }
             }
-            
+
             if (rModelSVRController)
             {
                 bool rControllerConnected = SVRInput.IsControllerConnected(1);
