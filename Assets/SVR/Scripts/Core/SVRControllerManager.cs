@@ -89,7 +89,7 @@ public class SVRControllerManager : MonoBehaviour
             long poll_timestamp = right_poll_timestamp_queue_.Dequeue();
             long render_timestamp = svr.SVRInputApi.SVRTimeNow();
             svr.SVRInputApi.SVRRenderFinish(svr.SVRInputApi.Chirality.Right, poll_timestamp, render_timestamp);
-	    }
+        }
 
 
 #if UNITY_IOS || UNITY_VISIONOS
@@ -109,25 +109,25 @@ public class SVRControllerManager : MonoBehaviour
             right_state.tracking_state_ = svr.SVRInputApi.SVRIsConnected(1) ? (InputTrackingState.Position | InputTrackingState.Rotation) : InputTrackingState.None;
             InputSystem.QueueStateEvent<SVRDeviceState>(right_device, right_state);
 
-	    }
+        }
 #endif
     }
 
     [MonoPInvokeCallback(typeof(svr.SVRInputApi.ButtonCallbackDelegate))]
-    static void ButtonInputCallback(long timestamp, int hand_type, svr.SVRInputApi.Buttons buttons) {
-        if (hand_type == 0) {
+    static void ButtonInputCallback(long timestamp, int chirality, svr.SVRInputApi.Buttons buttons) {
+        if (chirality == 0) {
             UpdateButtonInput(ref left_state, buttons);
-	    }
-        if (hand_type == 1) {
+        }
+        if (chirality == 1) {
             UpdateButtonInput(ref right_state, buttons);
-	    }
+        }
     }
 
     static void UpdateButtonInput(ref SVRDeviceState state, svr.SVRInputApi.Buttons buttons) {
         state.buttons_ = (buttons.primary_button) |
-	                       (buttons.secondary_button << 1) |
-			                    (buttons.menu_button << 2) |
-		                    (buttons.stick_z_button) << 5;
+                           (buttons.secondary_button << 1) |
+                                (buttons.menu_button << 2) |
+                            (buttons.stick_z_button) << 5;
         state.grip_ = buttons.grip_button_value;
         state.trigger_ = buttons.trigger_button_value;
         state.x_ = buttons.stick_x_value;
@@ -137,33 +137,33 @@ public class SVRControllerManager : MonoBehaviour
 
         if (TriggerPerfom) {
             state.buttons_ |= 0x1 << 3;
-	    } else {
+        } else {
             state.buttons_ &= 0xff ^ (0x1 << 3);
-	    }
+        }
 
         if (GripPerform) {
             state.buttons_ |= 0x1 << 4;
-	    } else {
+        } else {
             state.buttons_ &= 0xff ^ (0x1 << 4);
-	    }
+        }
 
     }
 
-    void SVRUpdatePose(long poll_timestamp,int hand_type,ref SVRDeviceState state) {
+    void SVRUpdatePose(long poll_timestamp,int chirality,ref SVRDeviceState state) {
         svr.SVRInputApi.SVRPose pose = new svr.SVRInputApi.SVRPose();
         svr.SVRInputApi.SVRVector3f linear_velocity = new svr.SVRInputApi.SVRVector3f();
         var angular_velocity = new svr.SVRInputApi.SVRVector3f();
-        SVRControllerPose(poll_timestamp, hand_type, ref pose, ref linear_velocity, ref angular_velocity);
+        SVRControllerPose(poll_timestamp, chirality, ref pose, ref linear_velocity, ref angular_velocity);
         state.rotation_ = new Quaternion(pose.qx, pose.qy, pose.qz, pose.qw);
         state.position_ = new Vector3(pose.x, pose.y, pose.z);
         state.deviceVelocity_ = new Vector3(linear_velocity.x, linear_velocity.y, linear_velocity.z);
         state.deviceAngularVelocity_ = new Vector3(angular_velocity.x, angular_velocity.y, angular_velocity.z);
     }
 
-    void SVRControllerPose(long poll_timestamp, int hand_type, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity)
+    void SVRControllerPose(long poll_timestamp, int chirality, ref svr.SVRInputApi.SVRPose pose, ref svr.SVRInputApi.SVRVector3f linear_velocity, ref svr.SVRInputApi.SVRVector3f angular_velocity)
     {
 #if UNITY_IOS || UNITY_VISIONOS
-        svr.SVRInputApi.SVRPollDevicePose(hand_type, poll_timestamp, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
+        svr.SVRInputApi.SVRPollDevicePose(chirality, poll_timestamp, ref pose, ref linear_velocity, ref angular_velocity, IntPtr.Zero);
 #endif
     }
 
@@ -195,12 +195,19 @@ public class SVRControllerManager : MonoBehaviour
         }
     }
 
-    public bool IsControllerConnected(int handType)
+    public bool IsControllerConnected(int chirality)
     {
 #if UNITY_IOS || UNITY_VISIONOS
-        return svr.SVRInputApi.SVRIsConnected(handType);
+        return svr.SVRInputApi.SVRIsConnected(chirality);
 #else
         return false;
+#endif
+    }
+
+    public void SVRHaptic(int chirality, float amplitude, float frequency, double duration_seconds)
+    {
+#if UNITY_IOS || UNITY_VISIONOS
+        svr.SVRInputApi.SVRHapticContinuous(chirality, amplitude, frequency, duration_seconds);
 #endif
     }
 
