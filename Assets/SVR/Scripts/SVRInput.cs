@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.XR.Hands;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+using Unity.PolySpatial.InputDevices;
 
 public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 {
@@ -48,6 +53,10 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     public static SVRInput instance;
     public SVRControllerManager svrControllerManager;
     public Camera xrCamera;
+    XRHandSubsystem xrHandSubsystem;
+    public GameObject leftHandTrackObj;
+    public GameObject rightHandTrackObj;
+    private bool useControllerHandFlag = true;
 
     void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
     {
@@ -212,7 +221,28 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         if (button == Button.A)
         {
-            return instance.right_controller_data.PrimaryButton;
+            if (instance.useControllerHandFlag)
+            {
+                return instance.right_controller_data.PrimaryButton;
+            }
+            else
+            {
+                if (Touch.activeTouches.Count > 0)
+                {
+                    foreach (var touch in Touch.activeTouches)
+                    {
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
         else if (button == Button.B)
         {
@@ -220,7 +250,28 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.X)
         {
-            return instance.left_controller_data.PrimaryButton;
+            if (instance.useControllerHandFlag)
+            {
+                return instance.left_controller_data.PrimaryButton;
+            }
+            else
+            {
+                if (Touch.activeTouches.Count > 0)
+                {
+                    foreach (var touch in Touch.activeTouches)
+                    {
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
         else if (button == Button.Y)
         {
@@ -703,7 +754,12 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     // Start is called before the first frame update
     void Start()
     {
-        
+        var handSubsystems = new List<XRHandSubsystem>();
+        SubsystemManager.GetSubsystems(handSubsystems);
+        if (handSubsystems.Count > 0)
+        {
+            xrHandSubsystem = handSubsystems[0];
+        }
     }
 
     // Update is called once per frame
@@ -731,44 +787,182 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         return xrCamera;
     }
 
+    public static void SwitchToControllerMode()
+    {
+        instance.useControllerHandFlag = true;
+    }
+
+    public static void SwitchToHandMode()
+    {
+        instance.useControllerHandFlag = false;
+    }
+
     public static Vector3 GetLeftControllerPosition()
     {
-        return instance.left_controller_data.Position;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.leftHand.isTracked)
+            {
+                Pose leftPalmPose = new Pose();
+                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetPose(out leftPalmPose);
+                return leftPalmPose.position;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.left_controller_data.Position;
+        }
     }
 
     public static Quaternion GetLeftControllerRotation()
     {
-        return instance.left_controller_data.Rotation;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.leftHand.isTracked)
+            {
+                Pose leftPalmPose = new Pose();
+                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetPose(out leftPalmPose);
+                return leftPalmPose.rotation;
+            }
+            else
+            {
+                return Quaternion.identity;
+            }
+        }
+        else
+        {
+            return instance.left_controller_data.Rotation;
+        }
     }
 
     public static Vector3 GetRightControllerPosition()
     {
-        return instance.right_controller_data.Position;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.rightHand.isTracked)
+            {
+                Pose rightPalmPose = new Pose();
+                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetPose(out rightPalmPose);
+                return rightPalmPose.position;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.right_controller_data.Position;
+        }
     }
 
     public static Quaternion GetRightControllerRotation()
     {
-        return instance.right_controller_data.Rotation;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.rightHand.isTracked)
+            {
+                Pose rightPalmPose = new Pose();
+                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetPose(out rightPalmPose);
+                return rightPalmPose.rotation;
+            }
+            else
+            {
+                return Quaternion.identity;
+            }
+        }
+        else
+        {
+            return instance.right_controller_data.Rotation;
+        }
     }
 
     public static Vector3 GetLeftControllerVelocity()
     {
-        return instance.left_controller_data.DeviceVelocity;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.leftHand.isTracked)
+            {
+                Vector3 leftPalmLinearVelocity = new Vector3();
+                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetLinearVelocity(out leftPalmLinearVelocity);
+                return leftPalmLinearVelocity;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.left_controller_data.DeviceVelocity;
+        }
     }
 
     public static Vector3 GetRightControllerVelocity()
     {
-        return instance.right_controller_data.DeviceVelocity;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.rightHand.isTracked)
+            {
+                Vector3 rightPalmLinearVelocity = new Vector3();
+                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetLinearVelocity(out rightPalmLinearVelocity);
+                return rightPalmLinearVelocity;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.right_controller_data.DeviceVelocity;
+        }
     }
 
     public static Vector3 GetLeftControllerAngularVelocity()
     {
-        return instance.left_controller_data.DeviceAngularVelocity;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.leftHand.isTracked)
+            {
+                Vector3 leftPalmAngularVelocity = new Vector3();
+                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetAngularVelocity(out leftPalmAngularVelocity);
+                return leftPalmAngularVelocity;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.left_controller_data.DeviceAngularVelocity;
+        }
     }
 
     public static Vector3 GetRightControllerAngularVelocity()
     {
-        return instance.right_controller_data.DeviceAngularVelocity;
+        if (!instance.useControllerHandFlag)
+        {
+            if (instance.xrHandSubsystem.rightHand.isTracked)
+            {
+                Vector3 rightPalmAngularVelocity = new Vector3();
+                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetAngularVelocity(out rightPalmAngularVelocity);
+                return rightPalmAngularVelocity;
+            }
+            else
+            {
+                return Vector3.zero;
+            }
+        }
+        else
+        {
+            return instance.right_controller_data.DeviceAngularVelocity;
+        }
     }
 
     /**
