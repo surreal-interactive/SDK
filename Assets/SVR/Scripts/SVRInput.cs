@@ -803,9 +803,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
-                Pose leftPalmPose = new Pose();
-                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetPose(out leftPalmPose);
-                return leftPalmPose.position;
+                return instance.xrHandSubsystem.leftHand.rootPose.position;
             }
             else
             {
@@ -824,9 +822,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
-                Pose leftPalmPose = new Pose();
-                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetPose(out leftPalmPose);
-                return leftPalmPose.rotation;
+                return instance.xrHandSubsystem.leftHand.rootPose.rotation;
             }
             else
             {
@@ -845,9 +841,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
-                Pose rightPalmPose = new Pose();
-                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetPose(out rightPalmPose);
-                return rightPalmPose.position;
+                return instance.xrHandSubsystem.rightHand.rootPose.position;
             }
             else
             {
@@ -866,9 +860,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
-                Pose rightPalmPose = new Pose();
-                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetPose(out rightPalmPose);
-                return rightPalmPose.rotation;
+                return instance.xrHandSubsystem.rightHand.rootPose.rotation;
             }
             else
             {
