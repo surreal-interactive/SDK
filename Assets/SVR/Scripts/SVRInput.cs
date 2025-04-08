@@ -54,9 +54,17 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     public SVRControllerManager svrControllerManager;
     public Camera xrCamera;
     XRHandSubsystem xrHandSubsystem;
-    public GameObject leftHandTrackObj;
-    public GameObject rightHandTrackObj;
     private bool useControllerHandFlag = true;
+    private bool isLeftWristMotionRecord = false;
+    private bool isRightWristMotionRecord = false;
+    private Vector3 lastLeftWristPosition = Vector3.zero;
+    private Vector3 lastRightWristPosition = Vector3.zero;
+    private Quaternion lastLeftWristQuat = Quaternion.identity;
+    private Quaternion lastRightWristQuat = Quaternion.identity;
+    private Vector3 leftWristLinearVelocity = Vector3.zero;
+    private Vector3 rightWristLinearVelocity = Vector3.zero;
+    private Vector3 leftWristAngularVelocity = Vector3.zero;
+    private Vector3 rightWristAngularVelocity = Vector3.zero;
 
     void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
     {
@@ -221,28 +229,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
         if (button == Button.A)
         {
-            if (instance.useControllerHandFlag)
-            {
-                return instance.right_controller_data.PrimaryButton;
-            }
-            else
-            {
-                if (Touch.activeTouches.Count > 0)
-                {
-                    foreach (var touch in Touch.activeTouches)
-                    {
-                        if (touch.phase == TouchPhase.Began)
-                        {
-                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
-                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
+            return instance.right_controller_data.PrimaryButton;
         }
         else if (button == Button.B)
         {
@@ -250,9 +237,17 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.X)
         {
+            return instance.left_controller_data.PrimaryButton;
+        }
+        else if (button == Button.Y)
+        {
+            return instance.left_controller_data.SecondaryButton;
+        }
+        else if (button == Button.LIndexTrigger)
+        {
             if (instance.useControllerHandFlag)
             {
-                return instance.left_controller_data.PrimaryButton;
+                return instance.left_controller_data.TriggerButton;
             }
             else
             {
@@ -273,21 +268,34 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
                 return false;
             }
         }
-        else if (button == Button.Y)
-        {
-            return instance.left_controller_data.SecondaryButton;
-        }
-        else if (button == Button.LIndexTrigger)
-        {
-            return instance.left_controller_data.TriggerButton;
-        }
         else if (button == Button.LHandTrigger)
         {
             return instance.left_controller_data.GripButton;
         }
         else if (button == Button.RIndexTrigger)
         {
-            return instance.right_controller_data.TriggerButton;
+            if (instance.useControllerHandFlag)
+            {
+                return instance.right_controller_data.TriggerButton;
+            }
+            else
+            {
+                if (Touch.activeTouches.Count > 0)
+                {
+                    foreach (var touch in Touch.activeTouches)
+                    {
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
         else if (button == Button.RHandTrigger)
         {
@@ -767,6 +775,61 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     {
     }
 
+    private void FixedUpdate()
+    {
+        if (!useControllerHandFlag && xrHandSubsystem.leftHand.isTracked)
+        {
+            if (!isLeftWristMotionRecord)
+            {
+                lastLeftWristPosition = xrHandSubsystem.leftHand.rootPose.position;
+                leftWristLinearVelocity = Vector3.zero;
+                lastLeftWristQuat = xrHandSubsystem.leftHand.rootPose.rotation;
+                leftWristAngularVelocity = Vector3.zero;
+                isLeftWristMotionRecord = true;
+            }
+            else
+            {
+                leftWristLinearVelocity = (xrHandSubsystem.leftHand.rootPose.position - lastLeftWristPosition) /
+                    Time.deltaTime;
+                lastLeftWristPosition = xrHandSubsystem.leftHand.rootPose.position;
+
+                Quaternion deltaQ = xrHandSubsystem.leftHand.rootPose.rotation * Quaternion.Inverse(lastLeftWristQuat);
+                float angleDegrees;
+                Vector3 rotateAxis = Vector3.right;
+                deltaQ.ToAngleAxis(out angleDegrees, out rotateAxis);
+                float radians = angleDegrees * Mathf.Deg2Rad;
+                leftWristAngularVelocity = rotateAxis.normalized * (radians / Time.deltaTime);
+                lastLeftWristQuat = xrHandSubsystem.leftHand.rootPose.rotation;
+            }
+        }
+
+        if (!useControllerHandFlag && xrHandSubsystem.rightHand.isTracked)
+        {
+            if (!isRightWristMotionRecord)
+            {
+                lastRightWristPosition = xrHandSubsystem.rightHand.rootPose.position;
+                rightWristLinearVelocity = Vector3.zero;
+                lastRightWristQuat = xrHandSubsystem.rightHand.rootPose.rotation;
+                rightWristAngularVelocity = Vector3.zero;
+                isRightWristMotionRecord = true;
+            }
+            else
+            {
+                rightWristLinearVelocity = (xrHandSubsystem.rightHand.rootPose.position - lastRightWristPosition) /
+                    Time.deltaTime;
+                lastRightWristPosition = xrHandSubsystem.rightHand.rootPose.position;
+
+                Quaternion deltaQ = xrHandSubsystem.rightHand.rootPose.rotation * Quaternion.Inverse(lastRightWristQuat);
+                float angleDegrees;
+                Vector3 rotateAxis = Vector3.right;
+                deltaQ.ToAngleAxis(out angleDegrees, out rotateAxis);
+                float radians = angleDegrees * Mathf.Deg2Rad;
+                rightWristAngularVelocity = rotateAxis.normalized * (radians / Time.deltaTime);
+                lastRightWristQuat = xrHandSubsystem.rightHand.rootPose.rotation;
+            }
+        }
+    }
+
     void OnEnable()
     {
         if (svr_input_controller == null)
@@ -879,9 +942,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
-                Vector3 leftPalmLinearVelocity = new Vector3();
-                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetLinearVelocity(out leftPalmLinearVelocity);
-                return leftPalmLinearVelocity;
+                return instance.leftWristLinearVelocity;
             }
             else
             {
@@ -900,9 +961,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
-                Vector3 rightPalmLinearVelocity = new Vector3();
-                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetLinearVelocity(out rightPalmLinearVelocity);
-                return rightPalmLinearVelocity;
+                return instance.rightWristLinearVelocity;
             }
             else
             {
@@ -921,9 +980,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
-                Vector3 leftPalmAngularVelocity = new Vector3();
-                instance.xrHandSubsystem.leftHand.GetJoint(XRHandJointID.Palm).TryGetAngularVelocity(out leftPalmAngularVelocity);
-                return leftPalmAngularVelocity;
+                return instance.leftWristAngularVelocity;
             }
             else
             {
@@ -942,9 +999,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
-                Vector3 rightPalmAngularVelocity = new Vector3();
-                instance.xrHandSubsystem.rightHand.GetJoint(XRHandJointID.Palm).TryGetAngularVelocity(out rightPalmAngularVelocity);
-                return rightPalmAngularVelocity;
+                return instance.rightWristAngularVelocity;
             }
             else
             {
