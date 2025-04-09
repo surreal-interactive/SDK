@@ -45,6 +45,11 @@ To ensure a smooth experience for developers who are familiar with Oculus SDK, a
 | Left Index Trigger Pressed | `OVRInput.Get(OVRInput.RawButton.LIndexTrigger)` | `SVRInput.GetDown(SVRInput.RawButton.LIndexTrigger)` |
 | Left Controller Vibration | `OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.LTouch)` | `// chirality: 0,1, amplitude 0-1, frequency 20-300 `<br>`SVRInput.TriggerHaptic(chirality, amplitude, frequency, duration_seconds)` |
 
+## Dynamic Switching Tracking Modes
+
+The API `SwitchMode(SVRControlMode)` enables dynamic switching between **hand tracking** and **controller tracking** modes. We recommend that developers design their games primarily around standard controller interactions. At the same time, for users who do not own a controller, it's encouraged to provide a **hand-tracking preview** of the gameplay experience. 
+
+To maintain a consistent interaction model, the interface in hand tracking mode mirrors that of controller mode—a **pinch gesture** is mapped to the **trigger** action on the controller.
 
 
 ## Step-by-Step Instruction

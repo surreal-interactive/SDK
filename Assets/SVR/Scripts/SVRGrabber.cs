@@ -101,13 +101,46 @@ public class SVRGrabber : MonoBehaviour
     // visible artifacts.
     virtual public void Update()
     {
-        OnUpdatedAnchors();
+        if (SVRInput.GetControlMode() == SVRControlMode.Controller)
+        {
+            OnUpdatedControllerGrab();
+        }
+        else
+        {
+            OnUpdateHandGrab();
+        }
+    }
+
+    void OnUpdateHandGrab()
+    {
+        Vector3 destPos = m_parentTransform.TransformPoint(m_anchorOffsetPosition);
+        Quaternion destRot = m_parentTransform.rotation * m_anchorOffsetRotation;
+
+
+        if (!m_parentHeldObject)
+        {
+            MoveGrabbedObject(destPos, destRot);
+        }
+
+        m_lastPos = transform.position;
+        m_lastRot = transform.rotation;
+
+        // Update values from inputs
+        if (SVRInput.GetDown(SVRInput.Button.LIndexTrigger))
+        {
+            GrabBegin();
+        }
+        else
+        {
+            GrabEnd();
+        }
+
     }
 
     // Hands follow the touch anchors by calling MovePosition each frame to reach the anchor.
     // This is done instead of parenting to achieve workable physics. If you don't require physics on
     // your hands or held objects, you may wish to switch to parenting.
-    void OnUpdatedAnchors()
+    void OnUpdatedControllerGrab()
     {
         Vector3 destPos = m_parentTransform.TransformPoint(m_anchorOffsetPosition);
         Quaternion destRot = m_parentTransform.rotation * m_anchorOffsetRotation;
@@ -312,7 +345,7 @@ public class SVRGrabber : MonoBehaviour
         }
     }
 
-    protected void GrabEnd()
+    protected virtual void GrabEnd()
     {
         if (m_grabbedObj != null)
         {
