@@ -10,6 +10,12 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 using Unity.PolySpatial.InputDevices;
 
+public enum SVRControlMode
+{
+    Controller,
+    Hand
+}
+
 public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 {
     public enum Button
@@ -54,7 +60,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
     public SVRControllerManager svrControllerManager;
     public Camera xrCamera;
     XRHandSubsystem xrHandSubsystem;
-    private bool useControllerHandFlag = true;
+    private SVRControlMode svrControlMode = SVRControlMode.Controller;
     private bool isLeftWristMotionRecord = false;
     private bool isRightWristMotionRecord = false;
     private Vector3 lastLeftWristPosition = Vector3.zero;
@@ -245,7 +251,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.LIndexTrigger)
         {
-            if (instance.useControllerHandFlag)
+            if (instance.svrControlMode == SVRControlMode.Controller)
             {
                 return instance.left_controller_data.TriggerButton;
             }
@@ -274,7 +280,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.RIndexTrigger)
         {
-            if (instance.useControllerHandFlag)
+            if (instance.svrControlMode == SVRControlMode.Controller)
             {
                 return instance.right_controller_data.TriggerButton;
             }
@@ -431,7 +437,28 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.LIndexTrigger)
         {
-            return !instance.left_controller_data.TriggerButton;
+            if (instance.svrControlMode == SVRControlMode.Controller)
+            {
+                return !instance.left_controller_data.TriggerButton;
+            }
+            else
+            {
+                if (Touch.activeTouches.Count > 0)
+                {
+                    foreach (var touch in Touch.activeTouches)
+                    {
+                        if (touch.phase == TouchPhase.Ended)
+                        {
+                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
         else if (button == Button.LHandTrigger)
         {
@@ -439,7 +466,28 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         }
         else if (button == Button.RIndexTrigger)
         {
-            return !instance.right_controller_data.TriggerButton;
+            if (instance.svrControlMode == SVRControlMode.Controller)
+            {
+                return !instance.right_controller_data.TriggerButton;
+            }
+            else
+            {
+                if (Touch.activeTouches.Count > 0)
+                {
+                    foreach (var touch in Touch.activeTouches)
+                    {
+                        if (touch.phase == TouchPhase.Ended)
+                        {
+                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
         }
         else if (button == Button.RHandTrigger)
         {
@@ -777,7 +825,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     private void FixedUpdate()
     {
-        if (!useControllerHandFlag && xrHandSubsystem.leftHand.isTracked)
+        if (svrControlMode == SVRControlMode.Hand && xrHandSubsystem.leftHand.isTracked)
         {
             if (!isLeftWristMotionRecord)
             {
@@ -803,7 +851,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
             }
         }
 
-        if (!useControllerHandFlag && xrHandSubsystem.rightHand.isTracked)
+        if (svrControlMode == SVRControlMode.Hand && xrHandSubsystem.rightHand.isTracked)
         {
             if (!isRightWristMotionRecord)
             {
@@ -850,19 +898,20 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
         return xrCamera;
     }
 
-    public static void SwitchToControllerMode()
+    public static SVRControlMode SwitchMode(SVRControlMode inMode)
     {
-        instance.useControllerHandFlag = true;
+        instance.svrControlMode = inMode;
+        return instance.svrControlMode;
     }
 
-    public static void SwitchToHandMode()
+    public static SVRControlMode GetControlMode()
     {
-        instance.useControllerHandFlag = false;
+        return instance.svrControlMode;
     }
 
     public static Vector3 GetLeftControllerPosition()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
@@ -881,7 +930,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Quaternion GetLeftControllerRotation()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
@@ -900,7 +949,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Vector3 GetRightControllerPosition()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
@@ -919,7 +968,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Quaternion GetRightControllerRotation()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
@@ -938,7 +987,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Vector3 GetLeftControllerVelocity()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
@@ -957,7 +1006,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Vector3 GetRightControllerVelocity()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
@@ -976,7 +1025,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Vector3 GetLeftControllerAngularVelocity()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.leftHand.isTracked)
             {
@@ -995,7 +1044,7 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
 
     public static Vector3 GetRightControllerAngularVelocity()
     {
-        if (!instance.useControllerHandFlag)
+        if (instance.svrControlMode == SVRControlMode.Hand)
         {
             if (instance.xrHandSubsystem.rightHand.isTracked)
             {
