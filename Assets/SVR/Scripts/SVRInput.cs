@@ -261,13 +261,11 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
                 {
                     foreach (var touch in Touch.activeTouches)
                     {
-                        if (touch.phase == TouchPhase.Began)
+                        SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                        if (touchData.Kind == SpatialPointerKind.DirectPinch ||
+                            touchData.Kind == SpatialPointerKind.IndirectPinch)
                         {
-                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
-                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }
@@ -290,13 +288,11 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
                 {
                     foreach (var touch in Touch.activeTouches)
                     {
-                        if (touch.phase == TouchPhase.Began)
+                        SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
+                        if (touchData.Kind == SpatialPointerKind.DirectPinch ||
+                            touchData.Kind == SpatialPointerKind.IndirectPinch)
                         {
-                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
-                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }
@@ -443,21 +439,14 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
             }
             else
             {
-                if (Touch.activeTouches.Count > 0)
+                if (Touch.activeTouches.Count == 0)
                 {
-                    foreach (var touch in Touch.activeTouches)
-                    {
-                        if (touch.phase == TouchPhase.Ended)
-                        {
-                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
-                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                    return true;
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
         }
         else if (button == Button.LHandTrigger)
@@ -472,21 +461,14 @@ public class SVRInput : MonoBehaviour, SVRInputControl.ISVRControlActions
             }
             else
             {
-                if (Touch.activeTouches.Count > 0)
+                if (Touch.activeTouches.Count == 0)
                 {
-                    foreach (var touch in Touch.activeTouches)
-                    {
-                        if (touch.phase == TouchPhase.Ended)
-                        {
-                            SpatialPointerState touchData = EnhancedSpatialPointerSupport.GetPointerState(touch);
-                            if (touchData.Kind == SpatialPointerKind.DirectPinch)
-                            {
-                                return true;
-                            }
-                        }
-                    }
+                    return true;
                 }
-                return false;
+                else
+                {
+                    return false;
+                }
             }
         }
         else if (button == Button.RHandTrigger)

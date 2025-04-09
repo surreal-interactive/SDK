@@ -143,34 +143,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.polyspatial.visionos": {
-      "version": "1.1.6",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.polyspatial": "1.1.6",
-        "com.unity.xr.visionos": "1.1.6",
-        "com.unity.xr.management": "4.4.0",
-        "com.unity.polyspatial.xr": "1.1.6"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.polyspatial.xr": {
-      "version": "1.1.6",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.hands": "1.1.0",
-        "com.unity.inputsystem": "1.4.4",
-        "com.unity.polyspatial": "1.1.6",
-        "com.unity.textmeshpro": "3.0.7",
-        "com.unity.xr.core-utils": "2.3.0",
-        "com.unity.xr.arfoundation": "5.1.0",
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.render-pipelines.universal": "14.0.1"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.render-pipelines.core": {
       "version": "14.0.11",
       "depth": 1,
@@ -387,17 +359,6 @@
         "com.unity.modules.xr": "1.0.0",
         "com.unity.modules.subsystems": "1.0.0",
         "com.unity.xr.legacyinputhelpers": "2.1.7"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.xr.visionos": {
-      "version": "1.1.6",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.core-utils": "2.3.0",
-        "com.unity.xr.management": "4.3.3",
-        "com.unity.xr.arfoundation": "5.1.0"
       },
       "url": "https://packages.unity.com"
     },

@@ -125,30 +125,16 @@ public class SVRGrabber : MonoBehaviour
         m_lastPos = transform.position;
         m_lastRot = transform.rotation;
 
-        float prevFlex = m_prevFlex;
         // Update values from inputs
-        if (m_controllerType == SVRControllerType.LController)
+        if (SVRInput.GetDown(SVRInput.Button.LIndexTrigger))
         {
-            if (SVRInput.GetDown(SVRInput.Button.LIndexTrigger))
-            {
-                GrabBegin();
-            }
-            else if (SVRInput.GetUp(SVRInput.Button.LIndexTrigger))
-            {
-                GrabEnd();
-            }
+            GrabBegin();
         }
-        else if (m_controllerType == SVRControllerType.RController)
+        else
         {
-            if (SVRInput.GetDown(SVRInput.Button.RIndexTrigger))
-            {
-                GrabBegin();
-            }
-            else if (SVRInput.GetUp(SVRInput.Button.RIndexTrigger))
-            {
-                GrabEnd();
-            }
+            GrabEnd();
         }
+
     }
 
     // Hands follow the touch anchors by calling MovePosition each frame to reach the anchor.
