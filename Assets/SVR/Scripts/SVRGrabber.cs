@@ -345,7 +345,7 @@ public class SVRGrabber : MonoBehaviour
         }
     }
 
-    protected void GrabEnd()
+    protected virtual void GrabEnd()
     {
         if (m_grabbedObj != null)
         {
