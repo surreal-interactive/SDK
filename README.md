@@ -45,6 +45,9 @@ To ensure a smooth experience for developers who are familiar with Oculus SDK, a
 | Left Index Trigger Pressed | `OVRInput.Get(OVRInput.RawButton.LIndexTrigger)` | `SVRInput.GetDown(SVRInput.RawButton.LIndexTrigger)` |
 | Left Controller Vibration | `OVRInput.SetControllerVibration(frequency, amplitude, OVRInput.Controller.LTouch)` | `// chirality: 0,1, amplitude 0-1, frequency 20-300 `<br>`SVRInput.TriggerHaptic(chirality, amplitude, frequency, duration_seconds)` |
 
+## Dynamic Switching Tracking Modes
+
+The api `SwitchMode(SVRControlMode)` enables dynamic switching between **hand tracking** and **controller tracking** modes, providing flexible interaction solutions for different XR scenarios. Developers can seamlessly transition spatial pose tracking sources through a unified API.
 
 
 ## Step-by-Step Instruction
