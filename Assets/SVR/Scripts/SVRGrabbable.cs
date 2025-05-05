@@ -113,7 +113,7 @@ public class SVRGrabbable : MonoBehaviour
     {
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = m_grabbedKinematic;
-        rb.velocity = linearVelocity;
+        rb.linearVelocity = linearVelocity;
         rb.angularVelocity = angularVelocity;
         m_grabbedBy = null;
         m_grabbedCollider = null;
